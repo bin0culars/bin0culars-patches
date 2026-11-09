@@ -1,9 +1,15 @@
 package app.bin0culars.extension.reddit;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.hardware.display.DisplayManager;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import app.bin0culars.extension.reddit.settings.BinocularsMods;
 
 public final class TabletGridFeedPatch {
+
+    private static Context appContext;
 
     private static void callMasonry(
             Object state,
@@ -38,10 +44,44 @@ public final class TabletGridFeedPatch {
         return null;
     }
 
+    private static int screenWidthDp() {
+        try {
+            Context context = appContext;
+            if (context == null) {
+                context = (Context) Class.forName("android.app.ActivityThread")
+                        .getMethod("currentApplication")
+                        .invoke(null);
+                appContext = context;
+            }
+            if (context != null) {
+                DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+                if (dm != null) {
+                    Display display = dm.getDisplay(Display.DEFAULT_DISPLAY);
+                    if (display != null) {
+                        DisplayMetrics metrics = new DisplayMetrics();
+                        display.getRealMetrics(metrics);
+                        if (metrics.density > 0) {
+                            return (int) (metrics.widthPixels / metrics.density);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return Resources.getSystem().getConfiguration().screenWidthDp;
+    }
+
     public static int columns() {
-        int widthDp = Resources.getSystem().getConfiguration().screenWidthDp;
+        int widthDp = screenWidthDp();
         if (widthDp < 600) {
             return 1;
+        }
+        String choice = BinocularsMods.getChoice("tablet_grid_columns");
+        if ("two".equals(choice)) {
+            return 2;
+        }
+        if ("three".equals(choice)) {
+            return 3;
         }
         if (widthDp < 900) {
             return 2;
@@ -50,6 +90,13 @@ public final class TabletGridFeedPatch {
     }
 
     public static int columnsForWidth(int availablePx, int original) {
+        String choice = BinocularsMods.getChoice("tablet_grid_columns");
+        if ("two".equals(choice)) {
+            return 2;
+        }
+        if ("three".equals(choice)) {
+            return 3;
+        }
         float dp = availablePx / Resources.getSystem().getDisplayMetrics().density;
         return dp >= 840f ? Math.max(original, 3) : original;
     }
