@@ -1,3 +1,9 @@
+## [1.1.0-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-11-09)
+
+### ✨ New Features
+
+* **reddit:** choose 2 or 3 columns for the tablet grid ([#11](https://github.com/bin0culars/bin0culars-patches/issues/11)) ([2b10030](https://github.com/bin0culars/bin0culars-patches/commit/2b10030e4cf27701f7dbb615258be2fe2ddfd0f6))
+
 ## [1.1.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-11-09)
 
 ### ✨ New Features
