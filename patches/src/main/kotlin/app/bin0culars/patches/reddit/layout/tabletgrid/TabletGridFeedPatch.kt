@@ -1,5 +1,10 @@
 package app.bin0culars.patches.reddit.layout.tabletgrid
 
+import app.bin0culars.patches.reddit.misc.settings.BinocularsModsChoice
+import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSection
+import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSection.FEED
+import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSetting
+import app.bin0culars.patches.reddit.misc.settings.addBinocularsModsSetting
 import app.bin0culars.patches.reddit.misc.settings.binocularsModsSettingsPatch
 import app.bin0culars.patches.reddit.shared.Constants.COMPATIBILITY_REDDIT
 import app.morphe.patcher.Fingerprint
@@ -35,6 +40,32 @@ val tabletGridFeedPatch =
         extendWith("extensions/extension.mpe")
 
         execute {
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
+                    key = "tablet_grid_feed",
+                    section = FEED,
+                    title = "Tablet grid feed",
+                    summary =
+                    "Shows Home, Popular and community feeds as a 2–3 column grid on tablets and other wide screens. Phones are unchanged.",
+                    default = true,
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
+                    key = "tablet_grid_columns",
+                    section = BinocularsModsSection.FEED,
+                    title = "Grid columns",
+                    summary = "Auto uses 2 columns on smaller tablets and 3 on wider screens.",
+                    parentKey = "tablet_grid_feed",
+                    choices = listOf(
+                        BinocularsModsChoice("auto", "Auto"),
+                        BinocularsModsChoice("two", "2 columns"),
+                        BinocularsModsChoice("three", "3 columns"),
+                    ),
+                    defaultChoice = "auto",
+                ),
+            )
+
             val cellsClass = StaggeredCellsFingerprint.classDef
             val calculateCellsMethod =
                 cellsClass.methods.firstOrNull { method ->
