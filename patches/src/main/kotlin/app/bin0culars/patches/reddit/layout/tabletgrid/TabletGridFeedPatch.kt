@@ -1,5 +1,6 @@
 package app.bin0culars.patches.reddit.layout.tabletgrid
 
+import app.bin0culars.patches.reddit.misc.settings.binocularsModsSettingsPatch
 import app.bin0culars.patches.reddit.shared.Constants.COMPATIBILITY_REDDIT
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
@@ -28,6 +29,8 @@ val tabletGridFeedPatch =
         default = true,
     ) {
         compatibleWith(COMPATIBILITY_REDDIT)
+
+        dependsOn(binocularsModsSettingsPatch)
 
         extendWith("extensions/extension.mpe")
 

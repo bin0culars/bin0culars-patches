@@ -1,6 +1,7 @@
 package app.bin0culars.extension.reddit;
 
 import android.content.res.Resources;
+import app.bin0culars.extension.reddit.settings.BinocularsMods;
 
 public final class TabletGridFeedPatch {
 
@@ -62,6 +63,9 @@ public final class TabletGridFeedPatch {
             Object header,
             Object stateSlot,
             Object composer) {
+        if (!BinocularsMods.isTabletGridEnabled()) {
+            return false;
+        }
         if (columns() <= 1) {
             return false;
         }
