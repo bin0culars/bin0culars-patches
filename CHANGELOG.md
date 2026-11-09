@@ -1,3 +1,9 @@
+## [1.3.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.2.1...v1.3.0-dev.1) (2026-11-09)
+
+### ✨ New Features
+
+* **reddit:** choose how much the side panel dims the feed ([#16](https://github.com/bin0culars/bin0culars-patches/issues/16)) ([1d06bf3](https://github.com/bin0culars/bin0culars-patches/commit/1d06bf313eba8ac3dd44ba1c8f6fd909eda8d997))
+
 ## [1.2.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.2.0...v1.2.1) (2026-11-09)
 
 ### 🐛 Bug Fixes
