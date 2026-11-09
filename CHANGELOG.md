@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0...v1.2.0) (2026-11-09)
+
+### ✨ New Features
+
+* **reddit:** choose Anonymous Browsing or Incognito in the account switcher ([#12](https://github.com/bin0culars/bin0culars-patches/issues/12)) ([8232f0b](https://github.com/bin0culars/bin0culars-patches/commit/8232f0b7f49eb0a4af2b6b0d9c5df37307f9d876))
+
 ## [1.2.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-11-09)
 
 ### ✨ New Features
