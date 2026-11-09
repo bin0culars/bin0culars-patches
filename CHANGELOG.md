@@ -1,3 +1,9 @@
+## [1.1.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.0.1...v1.1.0-dev.1) (2026-11-09)
+
+### ✨ New Features
+
+* **reddit:** settings registry for bin0culars mods ([#8](https://github.com/bin0culars/bin0culars-patches/issues/8)) ([1e9ee8a](https://github.com/bin0culars/bin0culars-patches/commit/1e9ee8a597bfef5aa10093103f4409918dbce132))
+
 ## [1.0.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.0.0...v1.0.1) (2026-11-09)
 
 ### 🐛 Bug Fixes
