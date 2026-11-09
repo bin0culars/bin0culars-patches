@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-09T08:24:46",
-  "description": "## [1.0.1-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.0.0...v1.0.1-dev.1) (2026-11-09)\n\n### 🐛 Bug Fixes\n\n* **reddit:** load the settings back button label from resources ([#4](https://github.com/bin0culars/bin0culars-patches/issues/4)) ([f6fbf1d](https://github.com/bin0culars/bin0culars-patches/commit/f6fbf1db5d1af8bbc3da49521a10ee2566bb62f1))",
-  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.0.1-dev.1/patches-1.0.1-dev.1.mpp",
+  "created_at": "2026-11-09T08:29:05",
+  "description": "## [1.0.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.0.0...v1.0.1) (2026-11-09)\n\n### 🐛 Bug Fixes\n\n* **reddit:** load the settings back button label from resources ([#4](https://github.com/bin0culars/bin0culars-patches/issues/4)) ([f6fbf1d](https://github.com/bin0culars/bin0culars-patches/commit/f6fbf1db5d1af8bbc3da49521a10ee2566bb62f1))",
+  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.0.1/patches-1.0.1.mpp",
   "signature_download_url": "",
-  "version": "1.0.1-dev.1"
+  "version": "1.0.1"
 }
