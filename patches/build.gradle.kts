@@ -1,14 +1,13 @@
-group = "app.template"
+group = "app.bin0culars"
 
 patches {
-    // TODO: Update this section with your project details.
     about {
-        name = "UserXYZ Patches"
-        description = "Patches for apps I like"
-        source = "git@github.com:UserXYZ/morphe-patches.git"
-        author = "Awesome dev"
-        contact = "na"
-        website = "na"
+        name = "bin0culars-patches"
+        description = "Unofficial patches for Morphe-compatible patchers"
+        source = "git@github.com:bin0culars/bin0culars-patches.git"
+        author = "bin0culars"
+        contact = "https://github.com/bin0culars/bin0culars-patches/issues"
+        website = "https://github.com/bin0culars/bin0culars-patches"
         license = "GPLv3"
     }
 }

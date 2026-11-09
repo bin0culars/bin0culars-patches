@@ -132,3 +132,10 @@ node_modules/
 # Ignore IDEA files
 .idea/
 local.properties
+
+### bin0culars workflow
+# Original APKs and decompiled sources (never commit)
+/apks/
+/work/
+# Claude PM workflow files (local only)
+/.claude/
