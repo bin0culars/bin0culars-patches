@@ -136,7 +136,7 @@ public final class BinocularsMods {
                 dp(dialogContext, 48),
                 dp(dialogContext, 48)
         ));
-        backButton.setContentDescription("Back");
+        backButton.setContentDescription(getString(dialogContext, "bin0culars_back"));
         backButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         backButton.setPadding(0, 0, 0, 0);
 
