@@ -1,3 +1,9 @@
+## [1.1.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-11-09)
+
+### ✨ New Features
+
+* **reddit:** open posts in a side panel on tablets ([#10](https://github.com/bin0culars/bin0culars-patches/issues/10)) ([418e02a](https://github.com/bin0culars/bin0culars-patches/commit/418e02ab39fe43bb3dd5ec0fe914406790276129))
+
 ## [1.1.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.0.1...v1.1.0-dev.1) (2026-11-09)
 
 ### ✨ New Features
