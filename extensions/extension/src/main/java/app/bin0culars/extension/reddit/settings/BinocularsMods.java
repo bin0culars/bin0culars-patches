@@ -1,8 +1,11 @@
 package app.bin0culars.extension.reddit.settings;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -11,20 +14,145 @@ import android.net.Uri;
 import android.os.Looper;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final class BinocularsMods {
 
     private static final String PREFS_NAME = "bin0culars_mods";
-    private static final String KEY_TABLET_GRID_FEED = "tablet_grid_feed";
+    private static final String[] SECTION_ORDER = {
+        "feed", "posts", "media", "navigation", "links", "privacy", "misc"
+    };
 
     private static Context appContext;
+    private static SharedPreferences cachedPrefs;
+    private static List<SettingEntry> registryEntries;
+
+    private static final class SettingEntry {
+        final String key;
+        final String sectionId;
+        final String parentKey;
+        final boolean isSwitch;
+        final boolean defaultBoolean;
+        final String defaultChoice;
+        final List<String> choiceValues;
+
+        SettingEntry(
+                String key,
+                String sectionId,
+                String parentKey,
+                boolean isSwitch,
+                boolean defaultBoolean,
+                String defaultChoice,
+                List<String> choiceValues) {
+            this.key = key;
+            this.sectionId = sectionId;
+            this.parentKey = parentKey != null && !parentKey.isEmpty() ? parentKey : null;
+            this.isSwitch = isSwitch;
+            this.defaultBoolean = defaultBoolean;
+            this.defaultChoice = defaultChoice;
+            this.choiceValues = Collections.unmodifiableList(choiceValues);
+        }
+    }
+
+    private static final class RowViewHolder {
+        final SettingEntry entry;
+        final View rowView;
+        final Switch switchView;
+        final TextView choiceLabelView;
+
+        RowViewHolder(
+                SettingEntry entry,
+                View rowView,
+                Switch switchView,
+                TextView choiceLabelView) {
+            this.entry = entry;
+            this.rowView = rowView;
+            this.switchView = switchView;
+            this.choiceLabelView = choiceLabelView;
+        }
+    }
+
+    private static String registryData() {
+        // Modified during patching.
+        return "";
+    }
+
+    private static synchronized List<SettingEntry> getEntries() {
+        if (registryEntries != null) {
+            return registryEntries;
+        }
+        String data = registryData();
+        if (data == null || data.isEmpty()) {
+            registryEntries = Collections.emptyList();
+            return registryEntries;
+        }
+        List<SettingEntry> entries = new ArrayList<>();
+        String[] lines = data.split("\n");
+        for (String line : lines) {
+            if (line.isEmpty()) {
+                continue;
+            }
+            String[] parts = line.split("\\|", -1);
+            if (parts.length < 6) {
+                continue;
+            }
+            String key = parts[0];
+            String sectionId = parts[1];
+            String parentKey = parts[2].isEmpty() ? null : parts[2];
+            boolean isSwitch = "S".equalsIgnoreCase(parts[3]);
+            boolean defaultBoolean = false;
+            String defaultChoice = null;
+            if (isSwitch) {
+                defaultBoolean = "1".equals(parts[4]);
+            } else {
+                defaultChoice = parts[4];
+            }
+            List<String> choiceValues = new ArrayList<>();
+            if (!parts[5].isEmpty()) {
+                String[] cv = parts[5].split(",");
+                for (String c : cv) {
+                    if (!c.isEmpty()) {
+                        choiceValues.add(c);
+                    }
+                }
+            }
+            entries.add(
+                    new SettingEntry(
+                            key,
+                            sectionId,
+                            parentKey,
+                            isSwitch,
+                            defaultBoolean,
+                            defaultChoice,
+                            choiceValues));
+        }
+        registryEntries = Collections.unmodifiableList(entries);
+        return registryEntries;
+    }
+
+    private static SettingEntry findEntry(String key) {
+        if (key == null) {
+            return null;
+        }
+        for (SettingEntry entry : getEntries()) {
+            if (key.equals(entry.key)) {
+                return entry;
+            }
+        }
+        return null;
+    }
 
     private static Context getApplicationContext() {
         if (appContext != null) {
@@ -39,34 +167,51 @@ public final class BinocularsMods {
         return appContext;
     }
 
-    public static boolean isTabletGridEnabled() {
+    private static synchronized SharedPreferences getPrefs() {
+        if (cachedPrefs != null) {
+            return cachedPrefs;
+        }
+        Context context = getApplicationContext();
+        if (context != null) {
+            cachedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        }
+        return cachedPrefs;
+    }
+
+    public static boolean isEnabled(String key) {
         try {
-            Context context = getApplicationContext();
-            if (context == null) {
-                return true;
+            SettingEntry entry = findEntry(key);
+            if (entry == null || !entry.isSwitch) {
+                return false;
             }
-            SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            return prefs.getBoolean(KEY_TABLET_GRID_FEED, true);
+            if (entry.parentKey != null && !isEnabled(entry.parentKey)) {
+                return false;
+            }
+            SharedPreferences prefs = getPrefs();
+            if (prefs == null) {
+                return entry.defaultBoolean;
+            }
+            return prefs.getBoolean(entry.key, entry.defaultBoolean);
         } catch (Throwable ignored) {
-            return true;
+            return false;
         }
     }
 
-    private static void saveTabletGridEnabled(Context context, boolean enabled) {
+    public static String getChoice(String key) {
         try {
-            Context app = appContext;
-            if (app == null && context != null) {
-                app = context.getApplicationContext();
-                appContext = app;
+            SettingEntry entry = findEntry(key);
+            if (entry == null || entry.isSwitch) {
+                return "";
             }
-            if (app == null) {
-                app = getApplicationContext();
+            String def = entry.defaultChoice != null ? entry.defaultChoice : "";
+            SharedPreferences prefs = getPrefs();
+            if (prefs == null) {
+                return def;
             }
-            if (app != null) {
-                SharedPreferences prefs = app.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                prefs.edit().putBoolean(KEY_TABLET_GRID_FEED, enabled).apply();
-            }
+            String val = prefs.getString(entry.key, def);
+            return val != null ? val : def;
         } catch (Throwable ignored) {
+            return "";
         }
     }
 
@@ -96,6 +241,56 @@ public final class BinocularsMods {
         return false;
     }
 
+    private static void restartApp(Activity activity) {
+        try {
+            Context context = activity != null ? activity : getApplicationContext();
+            if (context != null) {
+                String packageName = context.getPackageName();
+                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+                if (launchIntent != null) {
+                    ComponentName component = launchIntent.getComponent();
+                    if (component != null) {
+                        Intent restartIntent = Intent.makeRestartActivityTask(component);
+                        context.startActivity(restartIntent);
+                    } else {
+                        context.startActivity(launchIntent);
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        System.exit(0);
+    }
+
+    private static boolean isParentChecked(String parentKey, List<RowViewHolder> holders) {
+        for (RowViewHolder h : holders) {
+            if (parentKey.equals(h.entry.key)) {
+                if (h.switchView != null) {
+                    if (h.entry.parentKey != null && !isParentChecked(h.entry.parentKey, holders)) {
+                        return false;
+                    }
+                    return h.switchView.isChecked();
+                }
+                return false;
+            }
+        }
+        return isEnabled(parentKey);
+    }
+
+    private static void updateSubSwitches(List<RowViewHolder> holders) {
+        for (RowViewHolder h : holders) {
+            if (h.entry.parentKey != null) {
+                boolean parentOn = isParentChecked(h.entry.parentKey, holders);
+                h.rowView.setEnabled(parentOn);
+                h.rowView.setClickable(parentOn);
+                h.rowView.setAlpha(parentOn ? 1.0f : 0.38f);
+                if (h.switchView != null) {
+                    h.switchView.setEnabled(parentOn);
+                }
+            }
+        }
+    }
+
     private static void showSettings(Activity activity) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
             return;
@@ -106,6 +301,7 @@ public final class BinocularsMods {
         Context dialogContext = dialog.getContext();
         int textColorPrimary = resolveColor(dialogContext, android.R.attr.textColorPrimary);
         int textColorSecondary = resolveColor(dialogContext, android.R.attr.textColorSecondary);
+        int colorAccent = resolveColor(dialogContext, android.R.attr.colorAccent);
         int colorBackground = resolveColor(dialogContext, android.R.attr.colorBackground);
         if (colorBackground == 0) {
             colorBackground = resolveColor(dialogContext, android.R.attr.windowBackground);
@@ -185,81 +381,22 @@ public final class BinocularsMods {
 
         rootLayout.addView(topBar);
 
-        LinearLayout row = new LinearLayout(dialogContext);
-        row.setLayoutParams(new LinearLayout.LayoutParams(
+        ScrollView scrollView = new ScrollView(dialogContext);
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+        ));
+
+        LinearLayout contentLayout = new LinearLayout(dialogContext);
+        contentLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setMinimumHeight(dp(dialogContext, 56));
-        row.setPadding(dp(dialogContext, 16), dp(dialogContext, 12), dp(dialogContext, 16), dp(dialogContext, 12));
-        row.setClickable(true);
-        row.setFocusable(true);
+        contentLayout.setOrientation(LinearLayout.VERTICAL);
+        contentLayout.setPadding(0, 0, 0, dp(dialogContext, 16));
 
-        TypedValue selectableBg = new TypedValue();
-        if (dialogContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBg, true)) {
-            row.setBackgroundResource(selectableBg.resourceId);
-        }
-
-        LinearLayout textContainer = new LinearLayout(dialogContext);
-        LinearLayout.LayoutParams textContainerParams = new LinearLayout.LayoutParams(
-                0,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                1f
-        );
-        textContainerParams.setMarginEnd(dp(dialogContext, 16));
-        textContainerParams.rightMargin = dp(dialogContext, 16);
-        textContainer.setLayoutParams(textContainerParams);
-        textContainer.setOrientation(LinearLayout.VERTICAL);
-
-        TextView rowTitle = new TextView(dialogContext);
-        rowTitle.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        rowTitle.setText(getString(dialogContext, "bin0culars_tablet_grid_title"));
-        rowTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        if (textColorPrimary != 0) {
-            rowTitle.setTextColor(textColorPrimary);
-        }
-        textContainer.addView(rowTitle);
-
-        TextView rowSummary = new TextView(dialogContext);
-        LinearLayout.LayoutParams summaryParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        summaryParams.topMargin = dp(dialogContext, 2);
-        rowSummary.setLayoutParams(summaryParams);
-        rowSummary.setText(getString(dialogContext, "bin0culars_tablet_grid_summary"));
-        rowSummary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        if (textColorSecondary != 0) {
-            rowSummary.setTextColor(textColorSecondary);
-        }
-        textContainer.addView(rowSummary);
-
-        row.addView(textContainer);
-
-        Switch switchView = new Switch(dialogContext);
-        switchView.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        switchView.setFocusable(false);
-        switchView.setClickable(false);
-        switchView.setChecked(isTabletGridEnabled());
-
-        row.setOnClickListener(v -> {
-            boolean newState = !switchView.isChecked();
-            switchView.setChecked(newState);
-            saveTabletGridEnabled(dialogContext, newState);
-        });
-
-        row.addView(switchView);
-        rootLayout.addView(row);
-
-        TextView hintBanner = new TextView(dialogContext);
+        LinearLayout restartBanner = new LinearLayout(dialogContext);
         LinearLayout.LayoutParams bannerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -267,13 +404,10 @@ public final class BinocularsMods {
         bannerParams.setMargins(dp(dialogContext, 16), dp(dialogContext, 8), dp(dialogContext, 16), 0);
         bannerParams.setMarginStart(dp(dialogContext, 16));
         bannerParams.setMarginEnd(dp(dialogContext, 16));
-        hintBanner.setLayoutParams(bannerParams);
-        hintBanner.setText(getString(dialogContext, "bin0culars_restart_hint"));
-        hintBanner.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        if (textColorSecondary != 0) {
-            hintBanner.setTextColor(textColorSecondary);
-        }
-        hintBanner.setPadding(dp(dialogContext, 12), dp(dialogContext, 8), dp(dialogContext, 12), dp(dialogContext, 8));
+        restartBanner.setLayoutParams(bannerParams);
+        restartBanner.setOrientation(LinearLayout.HORIZONTAL);
+        restartBanner.setGravity(Gravity.CENTER_VERTICAL);
+        restartBanner.setPadding(dp(dialogContext, 12), dp(dialogContext, 8), dp(dialogContext, 12), dp(dialogContext, 8));
 
         GradientDrawable bannerBg = new GradientDrawable();
         bannerBg.setShape(GradientDrawable.RECTANGLE);
@@ -282,9 +416,244 @@ public final class BinocularsMods {
                 ? Color.argb(20, Color.red(textColorPrimary), Color.green(textColorPrimary), Color.blue(textColorPrimary))
                 : 0x14888888;
         bannerBg.setColor(tintColor);
-        hintBanner.setBackground(bannerBg);
+        restartBanner.setBackground(bannerBg);
+        restartBanner.setVisibility(View.GONE);
 
-        rootLayout.addView(hintBanner);
+        TextView hintText = new TextView(dialogContext);
+        hintText.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1f
+        ));
+        hintText.setText(getString(dialogContext, "bin0culars_restart_hint"));
+        hintText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        if (textColorSecondary != 0) {
+            hintText.setTextColor(textColorSecondary);
+        }
+        restartBanner.addView(hintText);
+
+        Button restartButton = new Button(dialogContext, null, android.R.attr.borderlessButtonStyle);
+        restartButton.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        restartButton.setText(getString(dialogContext, "bin0culars_restart"));
+        restartButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        restartButton.setMinimumHeight(0);
+        restartButton.setMinimumWidth(0);
+        restartButton.setPadding(dp(dialogContext, 12), dp(dialogContext, 4), dp(dialogContext, 12), dp(dialogContext, 4));
+        if (colorAccent != 0) {
+            restartButton.setTextColor(colorAccent);
+        }
+        restartButton.setOnClickListener(v -> restartApp(activity));
+        restartBanner.addView(restartButton);
+
+        contentLayout.addView(restartBanner);
+
+        SharedPreferences prefs = getPrefs();
+        List<SettingEntry> entries = getEntries();
+        List<RowViewHolder> viewHolders = new ArrayList<>();
+
+        List<String> sections = new ArrayList<>();
+        for (String secId : SECTION_ORDER) {
+            for (SettingEntry entry : entries) {
+                if (secId.equals(entry.sectionId) && !sections.contains(secId)) {
+                    sections.add(secId);
+                    break;
+                }
+            }
+        }
+        for (SettingEntry entry : entries) {
+            if (!sections.contains(entry.sectionId)) {
+                sections.add(entry.sectionId);
+            }
+        }
+
+        for (String sectionId : sections) {
+            List<SettingEntry> sectionEntries = new ArrayList<>();
+            for (SettingEntry entry : entries) {
+                if (sectionId.equals(entry.sectionId)) {
+                    String title = getString(dialogContext, "bin0culars_" + entry.key + "_title");
+                    if (!title.isEmpty()) {
+                        sectionEntries.add(entry);
+                    }
+                }
+            }
+            if (sectionEntries.isEmpty()) {
+                continue;
+            }
+
+            TextView sectionHeader = new TextView(dialogContext);
+            LinearLayout.LayoutParams headerParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            sectionHeader.setLayoutParams(headerParams);
+            sectionHeader.setPadding(dp(dialogContext, 16), dp(dialogContext, 16), dp(dialogContext, 16), dp(dialogContext, 4));
+            sectionHeader.setPaddingRelative(dp(dialogContext, 16), dp(dialogContext, 16), dp(dialogContext, 16), dp(dialogContext, 4));
+            String sectionTitle = getString(dialogContext, "bin0culars_section_" + sectionId);
+            sectionHeader.setText(!sectionTitle.isEmpty() ? sectionTitle : sectionId);
+            sectionHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            sectionHeader.setTypeface(Typeface.DEFAULT_BOLD);
+            if (colorAccent != 0) {
+                sectionHeader.setTextColor(colorAccent);
+            }
+            contentLayout.addView(sectionHeader);
+
+            for (SettingEntry entry : sectionEntries) {
+                String title = getString(dialogContext, "bin0culars_" + entry.key + "_title");
+
+                LinearLayout row = new LinearLayout(dialogContext);
+                row.setLayoutParams(new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+                row.setOrientation(LinearLayout.HORIZONTAL);
+                row.setGravity(Gravity.CENTER_VERTICAL);
+                row.setMinimumHeight(dp(dialogContext, 56));
+                int startPadding = entry.parentKey != null ? dp(dialogContext, 32) : dp(dialogContext, 16);
+                row.setPadding(startPadding, dp(dialogContext, 12), dp(dialogContext, 16), dp(dialogContext, 12));
+                row.setPaddingRelative(startPadding, dp(dialogContext, 12), dp(dialogContext, 16), dp(dialogContext, 12));
+                row.setClickable(true);
+                row.setFocusable(true);
+
+                TypedValue selectableBg = new TypedValue();
+                if (dialogContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBg, true)) {
+                    row.setBackgroundResource(selectableBg.resourceId);
+                }
+
+                LinearLayout textContainer = new LinearLayout(dialogContext);
+                LinearLayout.LayoutParams textContainerParams = new LinearLayout.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        1f
+                );
+                textContainerParams.setMarginEnd(dp(dialogContext, 16));
+                textContainerParams.rightMargin = dp(dialogContext, 16);
+                textContainer.setLayoutParams(textContainerParams);
+                textContainer.setOrientation(LinearLayout.VERTICAL);
+
+                TextView rowTitle = new TextView(dialogContext);
+                rowTitle.setLayoutParams(new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+                rowTitle.setText(title);
+                rowTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                if (textColorPrimary != 0) {
+                    rowTitle.setTextColor(textColorPrimary);
+                }
+                textContainer.addView(rowTitle);
+
+                String summary = getString(dialogContext, "bin0culars_" + entry.key + "_summary");
+                if (!summary.isEmpty()) {
+                    TextView rowSummary = new TextView(dialogContext);
+                    LinearLayout.LayoutParams summaryParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    summaryParams.topMargin = dp(dialogContext, 2);
+                    rowSummary.setLayoutParams(summaryParams);
+                    rowSummary.setText(summary);
+                    rowSummary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    if (textColorSecondary != 0) {
+                        rowSummary.setTextColor(textColorSecondary);
+                    }
+                    textContainer.addView(rowSummary);
+                }
+                row.addView(textContainer);
+
+                if (entry.isSwitch) {
+                    Switch switchView = new Switch(dialogContext);
+                    switchView.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    switchView.setFocusable(false);
+                    switchView.setClickable(false);
+                    boolean currentChecked = prefs != null
+                            ? prefs.getBoolean(entry.key, entry.defaultBoolean)
+                            : entry.defaultBoolean;
+                    switchView.setChecked(currentChecked);
+                    row.addView(switchView);
+
+                    RowViewHolder holder = new RowViewHolder(entry, row, switchView, null);
+                    viewHolders.add(holder);
+
+                    row.setOnClickListener(v -> {
+                        if (!row.isEnabled()) {
+                            return;
+                        }
+                        boolean newState = !switchView.isChecked();
+                        switchView.setChecked(newState);
+                        if (prefs != null) {
+                            prefs.edit().putBoolean(entry.key, newState).apply();
+                        }
+                        updateSubSwitches(viewHolders);
+                        restartBanner.setVisibility(View.VISIBLE);
+                    });
+                } else {
+                    TextView choiceLabelView = new TextView(dialogContext);
+                    choiceLabelView.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    choiceLabelView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    if (colorAccent != 0) {
+                        choiceLabelView.setTextColor(colorAccent);
+                    }
+
+                    String initialVal = prefs != null
+                            ? prefs.getString(entry.key, entry.defaultChoice != null ? entry.defaultChoice : "")
+                            : (entry.defaultChoice != null ? entry.defaultChoice : "");
+                    String initialLabel = getString(dialogContext, "bin0culars_" + entry.key + "_choice_" + initialVal);
+                    choiceLabelView.setText(!initialLabel.isEmpty() ? initialLabel : initialVal);
+                    row.addView(choiceLabelView);
+
+                    RowViewHolder holder = new RowViewHolder(entry, row, null, choiceLabelView);
+                    viewHolders.add(holder);
+
+                    row.setOnClickListener(v -> {
+                        if (!row.isEnabled()) {
+                            return;
+                        }
+                        List<String> values = entry.choiceValues;
+                        CharSequence[] items = new CharSequence[values.size()];
+                        for (int i = 0; i < values.size(); i++) {
+                            String val = values.get(i);
+                            String cl = getString(dialogContext, "bin0culars_" + entry.key + "_choice_" + val);
+                            items[i] = !cl.isEmpty() ? cl : val;
+                        }
+                        String currentVal = prefs != null
+                                ? prefs.getString(entry.key, entry.defaultChoice != null ? entry.defaultChoice : "")
+                                : (entry.defaultChoice != null ? entry.defaultChoice : "");
+                        int checkedItem = values.indexOf(currentVal);
+
+                        new AlertDialog.Builder(dialogContext)
+                                .setTitle(title)
+                                .setSingleChoiceItems(items, checkedItem, (d, which) -> {
+                                    if (which >= 0 && which < values.size()) {
+                                        String selectedVal = values.get(which);
+                                        if (prefs != null) {
+                                            prefs.edit().putString(entry.key, selectedVal).apply();
+                                        }
+                                        choiceLabelView.setText(items[which]);
+                                        restartBanner.setVisibility(View.VISIBLE);
+                                    }
+                                    d.dismiss();
+                                })
+                                .show();
+                    });
+                }
+
+                contentLayout.addView(row);
+            }
+        }
+
+        updateSubSwitches(viewHolders);
+
+        scrollView.addView(contentLayout);
+        rootLayout.addView(scrollView);
 
         dialog.setContentView(rootLayout);
         Window window = dialog.getWindow();

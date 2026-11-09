@@ -63,7 +63,7 @@ public final class TabletGridFeedPatch {
             Object header,
             Object stateSlot,
             Object composer) {
-        if (!BinocularsMods.isTabletGridEnabled()) {
+        if (!BinocularsMods.isEnabled("tablet_grid_feed")) {
             return false;
         }
         if (columns() <= 1) {
