@@ -1,8 +1,8 @@
 {
-  "created_at": "2026-11-09T13:56:34",
-  "description": "## [1.2.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0...v1.2.0) (2026-11-09)\n\n### ✨ New Features\n\n* **reddit:** choose Anonymous Browsing or Incognito in the account switcher ([#12](https://github.com/bin0culars/bin0culars-patches/issues/12)) ([8232f0b](https://github.com/bin0culars/bin0culars-patches/commit/8232f0b7f49eb0a4af2b6b0d9c5df37307f9d876))",
-  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.2.0/patches-1.2.0.mpp",
+  "created_at": "2026-11-09T14:19:54",
+  "description": "## [1.2.1-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.2.0...v1.2.1-dev.1) (2026-11-09)\n\n### 🐛 Bug Fixes\n\n* **reddit:** keep the first grid row below the search bar ([#14](https://github.com/bin0culars/bin0culars-patches/issues/14)) ([e6406e9](https://github.com/bin0culars/bin0culars-patches/commit/e6406e9258889fc289214bfe1e972034747a50f0))",
+  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.2.1-dev.1/patches-1.2.1-dev.1.mpp",
   "signature_download_url": "",
-  "version": "1.2.0",
+  "version": "1.2.1-dev.1",
   "public_key": "7zOu5+RSa1gkn+eAEQhYTyfc+ounL+lp73Y0awetm30="
 }

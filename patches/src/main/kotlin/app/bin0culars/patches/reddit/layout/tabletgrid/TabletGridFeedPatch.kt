@@ -128,7 +128,8 @@ val tabletGridFeedPatch =
                     move-object/from16 v5, p7
                     move-object/from16 v6, p9
                     move-object/from16 v7, p28
-                    invoke-static/range {v0 .. v7}, $EXTENSION_CLASS->masonryFeed(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+                    move/from16 v8, p6
+                    invoke-static/range {v0 .. v8}, $EXTENSION_CLASS->masonryFeed(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;F)Z
                     move-result v0
                     if-eqz v0, :continue
                     return-void

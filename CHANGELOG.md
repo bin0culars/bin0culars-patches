@@ -1,3 +1,9 @@
+## [1.2.1-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.2.0...v1.2.1-dev.1) (2026-11-09)
+
+### 🐛 Bug Fixes
+
+* **reddit:** keep the first grid row below the search bar ([#14](https://github.com/bin0culars/bin0culars-patches/issues/14)) ([e6406e9](https://github.com/bin0culars/bin0culars-patches/commit/e6406e9258889fc289214bfe1e972034747a50f0))
+
 ## [1.2.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0...v1.2.0) (2026-11-09)
 
 ### ✨ New Features

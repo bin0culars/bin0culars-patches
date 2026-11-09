@@ -9,6 +9,8 @@ import app.bin0culars.extension.reddit.settings.BinocularsMods;
 
 public final class TabletGridFeedPatch {
 
+    private static final float TOP_GAP_DP = 8f;
+
     private static Context appContext;
 
     private static void callMasonry(
@@ -109,7 +111,8 @@ public final class TabletGridFeedPatch {
             Object feedType,
             Object header,
             Object stateSlot,
-            Object composer) {
+            Object composer,
+            float topInset) {
         if (!BinocularsMods.isEnabled("tablet_grid_feed")) {
             return false;
         }
@@ -137,7 +140,7 @@ public final class TabletGridFeedPatch {
                 sink,
                 f1,
                 modifier,
-                newPadding(16f, 0f, 16f, 16f, null),
+                newPadding(16f, topInset + TOP_GAP_DP, 16f, 16f, null),
                 0f,
                 null,
                 footer(null),
