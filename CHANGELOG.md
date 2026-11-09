@@ -1,3 +1,11 @@
+## [1.1.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.0.1...v1.1.0) (2026-11-09)
+
+### ✨ New Features
+
+* **reddit:** choose 2 or 3 columns for the tablet grid ([#11](https://github.com/bin0culars/bin0culars-patches/issues/11)) ([2b10030](https://github.com/bin0culars/bin0culars-patches/commit/2b10030e4cf27701f7dbb615258be2fe2ddfd0f6))
+* **reddit:** open posts in a side panel on tablets ([#10](https://github.com/bin0culars/bin0culars-patches/issues/10)) ([418e02a](https://github.com/bin0culars/bin0culars-patches/commit/418e02ab39fe43bb3dd5ec0fe914406790276129))
+* **reddit:** settings registry for bin0culars mods ([#8](https://github.com/bin0culars/bin0culars-patches/issues/8)) ([1e9ee8a](https://github.com/bin0culars/bin0culars-patches/commit/1e9ee8a597bfef5aa10093103f4409918dbce132))
+
 ## [1.1.0-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-11-09)
 
 ### ✨ New Features
