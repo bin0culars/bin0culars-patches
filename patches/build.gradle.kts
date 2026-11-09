@@ -3,7 +3,7 @@ group = "app.bin0culars"
 patches {
     about {
         name = "bin0culars-patches"
-        description = "Unofficial patches for Morphe-compatible patchers"
+        description = "Patches for my favourite apps to improve the quality of life; especially on a tablet."
         source = "git@github.com:bin0culars/bin0culars-patches.git"
         author = "bin0culars"
         contact = "https://github.com/bin0culars/bin0culars-patches/issues"
