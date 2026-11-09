@@ -38,6 +38,10 @@ val binocularsModsSettingsPatch =
                     setAttribute("name", "bin0culars_restart_hint")
                     text = "Restart Reddit to apply changes."
                 }
+                strings.root.appendChild("string") {
+                    setAttribute("name", "bin0culars_back")
+                    text = "Back"
+                }
             }
 
             StartUrlActivityFingerprint.let {
