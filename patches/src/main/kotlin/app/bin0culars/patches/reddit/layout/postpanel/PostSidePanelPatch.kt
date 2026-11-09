@@ -53,6 +53,22 @@ val postSidePanelPatch = patch(
                 defaultChoice = "one",
             ),
         )
+        addBinocularsModsSetting(
+            BinocularsModsSetting(
+                key = "post_side_panel_dim",
+                section = BinocularsModsSection.POSTS,
+                title = "Feed dimming",
+                summary = "How dark the feed behind the panel gets. Light is Reddit's own level.",
+                parentKey = "post_side_panel",
+                choices = listOf(
+                    BinocularsModsChoice("off", "Off"),
+                    BinocularsModsChoice("light", "Light"),
+                    BinocularsModsChoice("medium", "Medium"),
+                    BinocularsModsChoice("strong", "Strong"),
+                ),
+                defaultChoice = "medium",
+            ),
+        )
 
         val modalClass = ModalPresentationFingerprint.instructionMatches.first().methodReference.definingClass
 

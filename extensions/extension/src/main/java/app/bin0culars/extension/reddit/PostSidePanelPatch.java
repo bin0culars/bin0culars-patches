@@ -85,6 +85,8 @@ public final class PostSidePanelPatch {
             }
             ViewGroup container = (ViewGroup) containerView;
 
+            applyBackdrop(root);
+
             final int radius = Math.round(16f * res.getDisplayMetrics().density);
             // Clip container so Compose content background respects rounded left corners.
             container.setOutlineProvider(new ViewOutlineProvider() {
@@ -198,6 +200,33 @@ public final class PostSidePanelPatch {
                     }
                 }
             });
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private static void applyBackdrop(View root) {
+        try {
+            if (root == null) {
+                return;
+            }
+            String dimChoice = BinocularsMods.getChoice("post_side_panel_dim");
+            float alpha;
+            if ("off".equals(dimChoice)) {
+                alpha = 0f;
+            } else if ("light".equals(dimChoice)) {
+                alpha = 0.38f;
+            } else if ("strong".equals(dimChoice)) {
+                alpha = 0.72f;
+            } else {
+                alpha = 0.55f;
+            }
+            try {
+                root.getClass().getMethod("setBackdropAlpha", float.class).invoke(root, alpha);
+            } catch (Throwable ignored) {
+                if (root.getBackground() != null) {
+                    root.getBackground().setAlpha(Math.round(alpha * 255));
+                }
+            }
         } catch (Throwable ignored) {
         }
     }
