@@ -17,7 +17,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.0](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
+> **[v1.0.1-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.0.1-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
 <details open>
 <summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -47,6 +47,17 @@ To toggle:
 
 - **Tested version:** 2026.45.0
 - **Tip:** Pairs well with Morphe's "Start as guest" and "Hide ads" patches.
+
+### Use with Morphe's Reddit patches
+
+Morphe Manager's simple mode patches each app from one source. To combine this patch with Morphe's own Reddit patches (for example Start as guest or Hide ads), turn on **Expert mode** in Morphe Manager's settings.
+
+1. Settings → Expert mode.
+2. Tap Reddit and choose the app version.
+3. On the patch selection screen, each source has its own tab: keep **Tablet grid feed** in the bin0culars-patches tab and pick the patches you want in the Morphe Patches tab (tap "source hidden" if that tab is not shown).
+4. Tap Patch and confirm **Proceed anyway** on the "Multiple patch sources selected" notice.
+
+Tested together with Morphe's Start as guest and Hide ads on Reddit 2026.45.0. Reddit settings then show both a **bin0culars mods** and a **Morphe** entry.
 
 ## 🐛 Issues and requests
 
