@@ -1,3 +1,15 @@
+## [1.4.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2026-11-10)
+
+### ✨ New Features
+
+* **reddit:** bin0culars mods link at the top of the community menu ([#20](https://github.com/bin0culars/bin0culars-patches/issues/20)) ([c0b3121](https://github.com/bin0culars/bin0culars-patches/commit/c0b3121a6cbce77382097e1bc651698e2f5db9e7))
+
+## [1.4.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.3.0...v1.4.0-dev.1) (2026-11-10)
+
+### ✨ New Features
+
+* **reddit:** content-type filter for Home and Popular ([#18](https://github.com/bin0culars/bin0culars-patches/issues/18)) ([b7c8a97](https://github.com/bin0culars/bin0culars-patches/commit/b7c8a97ab18acc2e4cb93d6df2041ac48ba49e10))
+
 ## [1.3.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.2.1...v1.3.0) (2026-11-09)
 
 ### ✨ New Features
