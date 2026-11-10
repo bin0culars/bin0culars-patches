@@ -6,6 +6,8 @@ import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSetting
 import app.bin0culars.patches.reddit.misc.settings.addBinocularsModsSetting
 import app.bin0culars.patches.reddit.misc.settings.binocularsModsSettingsPatch
 import app.bin0culars.patches.reddit.shared.Constants.COMPATIBILITY_REDDIT
+import app.bin0culars.patches.reddit.shared.ScreenCreateViewFingerprint
+import app.bin0culars.patches.reddit.shared.screenCreateViewRegisters
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
@@ -13,8 +15,6 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.patch
 import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
@@ -90,29 +90,7 @@ val postSidePanelPatch = patch(
         )
 
         val createViewMethod = ScreenCreateViewFingerprint.method
-        val instructions = createViewMethod.instructions
-
-        val returnIndex = instructions.indexOfLast { it.opcode == Opcode.RETURN_OBJECT }
-        if (returnIndex == -1) {
-            throw PatchException("Could not find RETURN_OBJECT instruction in ${createViewMethod.name}")
-        }
-
-        val returnInstruction = instructions[returnIndex] as? OneRegisterInstruction
-            ?: throw PatchException("RETURN_OBJECT instruction is not a OneRegisterInstruction in ${createViewMethod.name}")
-        val viewRegister = returnInstruction.registerA
-
-        val screenInstruction = instructions
-            .subList(0, returnIndex)
-            .findLast { instruction ->
-                if (instruction.opcode != Opcode.INVOKE_VIRTUAL) return@findLast false
-                val methodRef = (instruction as? ReferenceInstruction)?.reference as? MethodReference
-                    ?: return@findLast false
-                methodRef.definingClass == "Lcom/reddit/screen/BaseScreen;" && methodRef.parameterTypes.isEmpty()
-            } ?: throw PatchException("Could not find BaseScreen invoke-virtual with no arguments before RETURN_OBJECT in ${createViewMethod.name}")
-
-        val fiveReg = screenInstruction as? FiveRegisterInstruction
-            ?: throw PatchException("Screen invoke instruction is not a FiveRegisterInstruction in ${createViewMethod.name}")
-        val screenRegister = fiveReg.registerC
+        val (returnIndex, screenRegister, viewRegister) = screenCreateViewRegisters()
 
         val invokeInstruction = when {
             screenRegister < 16 && viewRegister < 16 ->

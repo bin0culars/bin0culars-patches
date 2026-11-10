@@ -34,15 +34,6 @@ object ModalPresentationFingerprint : Fingerprint(
     ),
 )
 
-object ScreenCreateViewFingerprint : Fingerprint(
-    definingClass = "Lcom/reddit/screen/BaseScreen;",
-    returnType = "Landroid/view/View;",
-    parameters = listOf("Landroid/view/LayoutInflater;", "Landroid/view/ViewGroup;"),
-    filters = listOf(
-        methodCall(smali = "Lcom/reddit/screen/dialog/ModalBackdropView;->setOnClickedOutside(Lkotlin/jvm/functions/Function0;)V"),
-    ),
-)
-
 object FeedCardOpenPostFingerprint : Fingerprint(
     returnType = "V",
     parameters = listOf(
