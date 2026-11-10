@@ -3,8 +3,12 @@
 package app.bin0culars.patches.reddit.misc.settings
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
 import app.morphe.patcher.string
+import com.android.tools.smali.dexlib2.Opcode
 
 internal object StartUrlActivityFingerprint : Fingerprint(
     isStatic = true,
@@ -28,6 +32,34 @@ internal object StartUrlActivityFingerprint : Fingerprint(
                 "Landroid/os/Bundle;",
                 "Z",
             ),
+        ),
+    ),
+)
+
+internal object DrawerPresenterConstructorFingerprint : Fingerprint(
+    name = "<init>",
+    custom = { method, _ ->
+        method.parameterTypes.firstOrNull()?.toString() == "Lcom/reddit/screens/drawer/community/CommunityDrawerScreen;"
+    },
+    filters = listOf(
+        resourceLiteral(ResourceType.STRING, "reddit_rules_title"),
+    ),
+)
+
+internal object DrawerListBuiltFingerprint : Fingerprint(
+    classFingerprint = DrawerPresenterConstructorFingerprint,
+    returnType = "V",
+    parameters = listOf(),
+    filters = listOf(
+        methodCall(
+            definingClass = "Lkotlin/collections/builders/ListBuilder;",
+            name = "build",
+            returnType = "Ljava/util/List;",
+        ),
+        fieldAccess(
+            opcode = Opcode.IPUT_OBJECT,
+            definingClass = "this",
+            type = "Ljava/util/List;",
         ),
     ),
 )
