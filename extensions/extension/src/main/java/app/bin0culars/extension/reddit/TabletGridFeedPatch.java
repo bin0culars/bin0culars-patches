@@ -135,6 +135,7 @@ public final class TabletGridFeedPatch {
             default:
                 return false;
         }
+        FeedAutoScrollPatch.setGridFeedType(sink, feedType);
         callMasonry(
                 state,
                 sink,
