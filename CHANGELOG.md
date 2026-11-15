@@ -1,3 +1,9 @@
+## [1.6.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.5.1...v1.6.0-dev.1) (2026-11-15)
+
+### ✨ New Features
+
+* **reddit:** add feed auto-scroll for the Home feed (beta) ([#26](https://github.com/bin0culars/bin0culars-patches/issues/26)) ([102557a](https://github.com/bin0culars/bin0culars-patches/commit/102557aa70f54b6a555a737aa8123b768b148c3b))
+
 ## [1.5.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.5.0...v1.5.1) (2026-11-15)
 
 ### 🐛 Bug Fixes
