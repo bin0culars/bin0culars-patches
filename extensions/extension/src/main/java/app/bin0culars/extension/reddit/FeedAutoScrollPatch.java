@@ -25,15 +25,42 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import app.bin0culars.extension.reddit.settings.BinocularsMods;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class FeedAutoScrollPatch {
 
+    private static final class FeedEntry {
+        final WeakReference<Object> stateRef;
+        WeakReference<Object> sinkRef;
+        long seq;
+
+        FeedEntry(Object state, Object sink, long seq) {
+            this.stateRef = new WeakReference<>(state);
+            this.sinkRef = new WeakReference<>(sink);
+            this.seq = seq;
+        }
+    }
+
+    private static final class VmVisibilityAccessor {
+        final Field field;
+        final Method getValueMethod;
+
+        VmVisibilityAccessor(Field field, Method getValueMethod) {
+            this.field = field;
+            this.getValueMethod = getValueMethod;
+        }
+    }
+
     private static WeakReference<Object> currentFeedState;
-    private static final List<WeakReference<Object>> homeSinks = new ArrayList<>();
+    private static WeakReference<Object> scrolledSink;
     private static WeakReference<Object> currentGridSink;
-    private static boolean homeTabSelected = true;
     private static boolean navBarShown = true;
     private static boolean activityResumed = false;
     private static SharedPreferences.OnSharedPreferenceChangeListener prefChangeListener;
@@ -44,6 +71,12 @@ public final class FeedAutoScrollPatch {
     private static float scrolledPx = 0f;
     private static long startTimeMs = -1L;
     private static WindowInsets lastInsets;
+
+    private static final List<FeedEntry> registry = new ArrayList<>();
+    private static final List<WeakReference<View>> postViews = new ArrayList<>();
+    private static long nextSeq = 0L;
+    private static Method callableRefGetBoundReceiver;
+    private static final Map<Class<?>, VmVisibilityAccessor> vmVisibilityCache = new HashMap<>();
 
     public static final class AutoScrollOverlayLayout extends FrameLayout {
 
@@ -91,29 +124,6 @@ public final class FeedAutoScrollPatch {
         return 0f;
     }
 
-    public static void setGridFeedType(Object sink, Object feedType) {
-        try {
-            if (sink == null) {
-                return;
-            }
-            synchronized (homeSinks) {
-                for (int i = homeSinks.size() - 1; i >= 0; i--) {
-                    Object s = homeSinks.get(i).get();
-                    if (s == null || s == sink) {
-                        homeSinks.remove(i);
-                    }
-                }
-                if (feedType instanceof Enum) {
-                    String name = ((Enum<?>) feedType).name();
-                    if ("HOME".equals(name)) {
-                        homeSinks.add(new WeakReference<>(sink));
-                    }
-                }
-            }
-        } catch (Throwable ignored) {
-        }
-    }
-
     public static void onGridComposing(Object sink) {
         try {
             currentGridSink = new WeakReference<>(sink);
@@ -121,15 +131,12 @@ public final class FeedAutoScrollPatch {
         }
     }
 
-    public static void onListFeed(Object state, Object feedType) {
+    public static void onListFeed(Object state, Object sink) {
         try {
-            if (state == null || !(feedType instanceof Enum)) {
+            if (state == null || sink == null) {
                 return;
             }
-            String name = ((Enum<?>) feedType).name();
-            if ("HOME".equals(name)) {
-                currentFeedState = new WeakReference<>(state);
-            }
+            registerFeed(state, sink);
         } catch (Throwable ignored) {
         }
     }
@@ -143,35 +150,210 @@ public final class FeedAutoScrollPatch {
             if (sink == null) {
                 return;
             }
-            boolean matches = false;
-            synchronized (homeSinks) {
-                for (int i = 0; i < homeSinks.size(); i++) {
-                    if (homeSinks.get(i).get() == sink) {
-                        matches = true;
-                        break;
-                    }
-                }
+            registerFeed(state, sink);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private static void registerFeed(Object state, Object sink) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            new Handler(Looper.getMainLooper()).post(() -> registerFeed(state, sink));
+            return;
+        }
+        for (int i = registry.size() - 1; i >= 0; i--) {
+            FeedEntry entry = registry.get(i);
+            if (entry.stateRef.get() == null || entry.sinkRef.get() == null) {
+                registry.remove(i);
             }
-            if (matches) {
-                currentFeedState = new WeakReference<>(state);
+        }
+        boolean found = false;
+        for (int i = 0; i < registry.size(); i++) {
+            FeedEntry entry = registry.get(i);
+            if (entry.stateRef.get() == state) {
+                entry.sinkRef = new WeakReference<>(sink);
+                entry.seq = ++nextSeq;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            registry.add(new FeedEntry(state, sink, ++nextSeq));
+        }
+        View button = overlayButtonRef != null ? overlayButtonRef.get() : null;
+        if (button != null && button.getVisibility() != View.VISIBLE) {
+            updateButtonVisibility();
+        }
+    }
+
+    public static void onFeedVisibilityChanged() {
+        try {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                try {
+                    updateButtonVisibility();
+                    if (isScrolling) {
+                        Object sink = scrolledSink != null ? scrolledSink.get() : null;
+                        Object vm = sink != null ? feedViewModel(sink) : null;
+                        if (vm == null || !isOnScreen(vm)) {
+                            stopAutoScroll();
+                        }
+                    }
+                } catch (Throwable ignored) {
+                }
+            });
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void onPostPageViewCreated(View view) {
+        try {
+            if (view == null) {
+                return;
+            }
+            if (!isTablet(view.getContext())) {
+                postViews.add(new WeakReference<>(view));
+                view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(View v) {
+                        try {
+                            stopAutoScroll();
+                            updateButtonVisibility();
+                        } catch (Throwable ignored) {
+                        }
+                    }
+
+                    @Override
+                    public void onViewDetachedFromWindow(View v) {
+                        try {
+                            updateButtonVisibility();
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                });
             }
         } catch (Throwable ignored) {
         }
     }
 
-    public static void onTabSelected(Object tab) {
+    private static Object feedViewModel(Object sink) {
+        if (sink == null) {
+            return null;
+        }
         try {
-            if (tab instanceof Enum) {
-                homeTabSelected = "Home".equals(((Enum<?>) tab).name());
-            } else {
-                homeTabSelected = false;
+            if (callableRefGetBoundReceiver == null) {
+                Class<?> callableRefClass = Class.forName("kotlin.jvm.internal.CallableReference");
+                callableRefGetBoundReceiver = callableRefClass.getMethod("getBoundReceiver");
+                callableRefGetBoundReceiver.setAccessible(true);
             }
-            if (!homeTabSelected) {
-                stopAutoScroll();
+            Class<?> callableRefClass = callableRefGetBoundReceiver.getDeclaringClass();
+            for (Field field : sink.getClass().getDeclaredFields()) {
+                try {
+                    field.setAccessible(true);
+                    Object value = field.get(sink);
+                    if (value != null && callableRefClass.isInstance(value)) {
+                        Object receiver = callableRefGetBoundReceiver.invoke(value);
+                        if (receiver != null && isRedditFeedViewModel(receiver.getClass())) {
+                            return receiver;
+                        }
+                    }
+                } catch (Throwable ignored) {
+                }
             }
-            updateButtonVisibility();
         } catch (Throwable ignored) {
         }
+        return null;
+    }
+
+    private static boolean isRedditFeedViewModel(Class<?> clazz) {
+        Class<?> current = clazz;
+        while (current != null && current != Object.class) {
+            if ("com.reddit.feeds.impl.ui.RedditFeedViewModel".equals(current.getName())) {
+                return true;
+            }
+            current = current.getSuperclass();
+        }
+        return false;
+    }
+
+    private static boolean isOnScreen(Object vm) {
+        if (vm == null) {
+            return false;
+        }
+        try {
+            Class<?> vmClass = vm.getClass();
+            VmVisibilityAccessor accessor = vmVisibilityCache.get(vmClass);
+            if (accessor == null) {
+                accessor = findVisibilityAccessor(vm);
+                if (accessor != null) {
+                    vmVisibilityCache.put(vmClass, accessor);
+                }
+            }
+            if (accessor != null) {
+                Object flow = accessor.field.get(vm);
+                if (flow != null) {
+                    Object val = accessor.getValueMethod.invoke(flow);
+                    if (val instanceof Enum) {
+                        return "ON_SCREEN".equals(((Enum<?>) val).name());
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    private static VmVisibilityAccessor findVisibilityAccessor(Object vm) {
+        Class<?> current = vm.getClass();
+        while (current != null && current != Object.class) {
+            Field[] fields = current.getDeclaredFields();
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);
+                    Object flow = field.get(vm);
+                    if (flow != null && flow.getClass().getName().startsWith("kotlinx.coroutines.flow.")) {
+                        Method getValue = flow.getClass().getMethod("getValue");
+                        if (Modifier.isPublic(getValue.getModifiers()) && getValue.getParameterTypes().length == 0) {
+                            getValue.setAccessible(true);
+                            Object ret = getValue.invoke(flow);
+                            if (ret instanceof Enum) {
+                                String enumClassName = ((Enum<?>) ret).getDeclaringClass().getName();
+                                if ("com.reddit.feeds.ui.FeedVisibility".equals(enumClassName)) {
+                                    return new VmVisibilityAccessor(field, getValue);
+                                }
+                            }
+                        }
+                    }
+                } catch (Throwable ignored) {
+                }
+            }
+            current = current.getSuperclass();
+        }
+        return null;
+    }
+
+    private static Object[] findOnScreenFeed() {
+        try {
+            for (int i = registry.size() - 1; i >= 0; i--) {
+                FeedEntry entry = registry.get(i);
+                if (entry.stateRef.get() == null || entry.sinkRef.get() == null) {
+                    registry.remove(i);
+                }
+            }
+            List<FeedEntry> sorted = new ArrayList<>(registry);
+            Collections.sort(sorted, (a, b) -> Long.compare(b.seq, a.seq));
+            for (FeedEntry entry : sorted) {
+                Object state = entry.stateRef.get();
+                Object sink = entry.sinkRef.get();
+                if (state == null || sink == null) {
+                    continue;
+                }
+                Object vm = feedViewModel(sink);
+                if (vm != null && isOnScreen(vm)) {
+                    return new Object[] { state, sink };
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return null;
     }
 
     public static void onNavBarFraction(float fraction) {
@@ -356,8 +538,13 @@ public final class FeedAutoScrollPatch {
             if (!BinocularsMods.isEnabled("feed_auto_scroll")) {
                 return;
             }
-            Object state = currentFeedState != null ? currentFeedState.get() : null;
-            if (state == null) {
+            Object[] target = findOnScreenFeed();
+            if (target == null) {
+                return;
+            }
+            Object state = target[0];
+            Object sink = target[1];
+            if (state == null || sink == null) {
                 return;
             }
             if (isScrolling) {
@@ -383,6 +570,8 @@ public final class FeedAutoScrollPatch {
             final float density = context.getResources().getDisplayMetrics().density;
             final float speedPxPerMs = (speed * density) / 1000f;
 
+            currentFeedState = new WeakReference<>(state);
+            scrolledSink = new WeakReference<>(sink);
             isScrolling = true;
             scrolledPx = 0f;
             startTimeMs = -1L;
@@ -408,11 +597,11 @@ public final class FeedAutoScrollPatch {
                     } else if (deltaTime > 100) {
                         startTimeMs += deltaTime;
                     }
-                    float target = speedPxPerMs * (totalTime - startTimeMs);
-                    float delta = target - scrolledPx;
+                    float targetPx = speedPxPerMs * (totalTime - startTimeMs);
+                    float delta = targetPx - scrolledPx;
                     if (delta > 0f) {
                         dispatchScroll(curState, delta);
-                        scrolledPx = target;
+                        scrolledPx = targetPx;
                     }
                 } catch (Throwable ignored) {
                 }
@@ -427,6 +616,8 @@ public final class FeedAutoScrollPatch {
             isScrolling = false;
             scrolledPx = 0f;
             startTimeMs = -1L;
+            scrolledSink = null;
+            currentFeedState = null;
             if (timeAnimator != null) {
                 timeAnimator.cancel();
                 timeAnimator = null;
@@ -496,6 +687,23 @@ public final class FeedAutoScrollPatch {
         }
     }
 
+    private static boolean postPageShown() {
+        try {
+            boolean shown = false;
+            for (int i = postViews.size() - 1; i >= 0; i--) {
+                View view = postViews.get(i).get();
+                if (view == null) {
+                    postViews.remove(i);
+                } else if (view.isAttachedToWindow()) {
+                    shown = true;
+                }
+            }
+            return shown;
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
     private static void updateButtonVisibility() {
         try {
             if (Looper.myLooper() != Looper.getMainLooper()) {
@@ -509,7 +717,7 @@ public final class FeedAutoScrollPatch {
             Context context = button.getContext();
             boolean enabled = BinocularsMods.isEnabled("feed_auto_scroll");
             boolean tablet = isTablet(context);
-            boolean visible = enabled && homeTabSelected && (tablet || navBarShown) && activityResumed;
+            boolean visible = enabled && activityResumed && (tablet || navBarShown) && findOnScreenFeed() != null && !postPageShown();
 
             if (!visible && isScrolling) {
                 stopAutoScroll();
