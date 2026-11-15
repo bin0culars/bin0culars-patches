@@ -2,17 +2,13 @@ package app.bin0culars.patches.reddit.layout.autoscroll
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
 import com.android.tools.smali.dexlib2.AccessFlags
 
-object TabSelectedFingerprint : Fingerprint(
-    returnType = "V",
-    parameters = listOf("Lcom/reddit/launch/bottomnav/BottomNavTab;", "Z"),
-    filters = listOf(
-        methodCall(
-            definingClass = "Lcom/reddit/launch/bottomnav/BottomNavScreenPresenter\$selectAndHandleTabSelection\$1;",
-            name = "<init>",
-        ),
-    ),
+object FeedVisibilityEventFingerprint : Fingerprint(
+    definingClass = "Lcom/reddit/feeds/impl/ui/events/FeedVisibilityEvent;",
+    name = "<init>",
 )
 
 object NavBarStateChangeFingerprint : Fingerprint(
@@ -42,4 +38,11 @@ object MainActivityPauseFingerprint : Fingerprint(
     name = "onPause",
     returnType = "V",
     parameters = listOf(),
+)
+
+object PostPagerInflateFingerprint : Fingerprint(
+    filters = listOf(
+        resourceLiteral(ResourceType.LAYOUT, "fragment_pager"),
+        methodCall(definingClass = "Landroid/view/LayoutInflater;", name = "inflate"),
+    ),
 )

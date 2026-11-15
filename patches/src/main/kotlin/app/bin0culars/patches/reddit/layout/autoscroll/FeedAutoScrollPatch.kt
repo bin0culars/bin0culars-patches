@@ -43,7 +43,7 @@ private fun allInterfaces(type: String): Set<String> {
 val feedAutoScrollPatch =
     patch(
         name = "Feed auto-scroll",
-        description = "Adds a play button to the navigation bar that slowly scrolls the Home feed. Speed is set in bin0culars mods.",
+        description = "Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods.",
         default = true,
     ) {
         compatibleWith(COMPATIBILITY_REDDIT)
@@ -59,7 +59,7 @@ val feedAutoScrollPatch =
                     section = FEED,
                     title = "Feed auto-scroll",
                     summary =
-                    "Adds a play button to the navigation bar (on phones, just above it) that slowly scrolls your Home feed. Tap stop or touch the screen to stop.",
+                    "Adds a play button to the navigation bar (on phones, just above it) that slowly scrolls the feed on screen. Tap stop or touch the screen to stop.",
                     default = false,
                 ),
             )
@@ -106,9 +106,11 @@ val feedAutoScrollPatch =
 
             val listParams = listFeedMethod.parameterTypes.map { it.toString() }
             val stateIndex = listParams.indexOfFirst { it == "Landroidx/compose/foundation/lazy/b;" }
-            val feedTypeIndex = listParams.indexOfFirst { it == "Lcom/reddit/feeds/data/FeedType;" }
-            if (stateIndex == -1 || feedTypeIndex == -1) {
-                throw PatchException("Could not find state or feedType parameter in ListFeedFingerprint")
+            if (stateIndex == -1) {
+                throw PatchException("Could not find state parameter in ListFeedFingerprint")
+            }
+            if (listParams.size < 2 || !listParams[1].startsWith("L")) {
+                throw PatchException("Parameter 1 in ${listFeedMethod.name} is not an object type: ${listParams.getOrNull(1)}")
             }
 
             val paramRegCount = listFeedMethod.parameterTypes.sumOf {
@@ -123,7 +125,7 @@ val feedAutoScrollPatch =
                 0,
                 """
                     move-object/from16 v0, p$stateIndex
-                    move-object/from16 v1, p$feedTypeIndex
+                    move-object/from16 v1, p1
                     invoke-static {v0, v1}, $EXTENSION_CLASS->onListFeed(Ljava/lang/Object;Ljava/lang/Object;)V
                 """,
             )
@@ -160,10 +162,25 @@ val feedAutoScrollPatch =
                 "invoke-static/range { v$vS .. v$vS }, $EXTENSION_CLASS->onGridComposing(Ljava/lang/Object;)V"
             innerMethod.addInstructions(0, invokeComposing)
 
-            TabSelectedFingerprint.method.addInstructions(
+            FeedVisibilityEventFingerprint.method.addInstructions(
                 0,
-                "invoke-static { p1 }, $EXTENSION_CLASS->onTabSelected(Ljava/lang/Object;)V",
+                "invoke-static {}, $EXTENSION_CLASS->onFeedVisibilityChanged()V",
             )
+
+            val postPagerMethod = PostPagerInflateFingerprint.method
+            val inflateIndex = PostPagerInflateFingerprint.instructionMatches[1].index
+            val inflateResultIndex = inflateIndex + 1
+            val inflateResultInstruction = postPagerMethod.getInstruction(inflateResultIndex)
+            if (inflateResultInstruction.opcode != Opcode.MOVE_RESULT_OBJECT) {
+                throw PatchException("Instruction after inflate call in ${postPagerMethod.name} is not move-result-object")
+            }
+            val viewRegister = (inflateResultInstruction as OneRegisterInstruction).registerA
+            val invokePostPage = if (viewRegister > 15) {
+                "invoke-static/range { v$viewRegister .. v$viewRegister }, $EXTENSION_CLASS->onPostPageViewCreated(Landroid/view/View;)V"
+            } else {
+                "invoke-static { v$viewRegister }, $EXTENSION_CLASS->onPostPageViewCreated(Landroid/view/View;)V"
+            }
+            postPagerMethod.addInstructions(inflateResultIndex + 1, invokePostPage)
 
             NavBarStateChangeFingerprint.method.addInstructions(
                 0,
