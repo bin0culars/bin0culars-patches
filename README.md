@@ -17,7 +17,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.6.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.6.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+> **[v1.6.0-dev.2](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.6.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
 <details open>
 <summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
 <br>
@@ -33,7 +33,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 |----------|----------------|-----------|
 | [Account switcher private mode](#account-switcher-private-mode) | Lets you choose whether the account switcher offers Anonymous Browsing or Incognito, even with one account. Choose in Settings → bin0culars mods. |  |
 | [Content-type filter](#content-type-filter) | Show only videos, images, text or link posts on Home and Popular. |  |
-| [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the Home feed. Speed is set in bin0culars mods. |  |
+| [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods. |  |
 | [Post side panel](#post-side-panel) | On tablets in landscape, opens posts in a panel on the right while the feed stays visible. Can be turned off in Settings → bin0culars mods. |  |
 | [Tablet grid feed](#tablet-grid-feed) | Shows the feed as a grid with 2 or 3 columns on tablets and other wide screens. Phones are unchanged. |  |
 

@@ -1,3 +1,9 @@
+## [1.6.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.6.0-dev.1...v1.6.0-dev.2) (2026-11-15)
+
+### ✨ New Features
+
+* **reddit:** auto-scroll the feed on screen and hide over post pages ([#28](https://github.com/bin0culars/bin0culars-patches/issues/28)) ([5ad48fb](https://github.com/bin0culars/bin0culars-patches/commit/5ad48fbed679adb3cad3f49644e5f8ecd3ea4157))
+
 ## [1.6.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.5.1...v1.6.0-dev.1) (2026-11-15)
 
 ### ✨ New Features
