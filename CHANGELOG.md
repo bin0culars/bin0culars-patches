@@ -1,3 +1,9 @@
+## [1.5.1-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.5.0...v1.5.1-dev.1) (2026-11-15)
+
+### 🐛 Bug Fixes
+
+* **reddit:** keep bin0culars mods at the top of the menu when About is collapsed ([#24](https://github.com/bin0culars/bin0culars-patches/issues/24)) ([165ae34](https://github.com/bin0culars/bin0culars-patches/commit/165ae343625f80067d25c59e12bd4a2425713a49))
+
 ## [1.5.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.4.0...v1.5.0) (2026-11-15)
 
 ### ✨ New Features
