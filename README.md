@@ -1,6 +1,6 @@
 # 🔭 bin0culars patches
 
-Unofficial patches for apps patched with [Morphe](https://morphe.software), made by bin0culars. Not affiliated with or endorsed by the Morphe project.
+Patches for apps patched with [Morphe](https://morphe.software), made by bin0culars.
 
 ## ❓ About
 
