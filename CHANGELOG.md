@@ -1,3 +1,9 @@
+## [1.7.1-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.7.0...v1.7.1-dev.1) (2026-11-18)
+
+### 🐛 Bug Fixes
+
+* **reddit:** hide auto-scroll button on the search screen ([#32](https://github.com/bin0culars/bin0culars-patches/issues/32)) ([ec223d4](https://github.com/bin0culars/bin0culars-patches/commit/ec223d43c2fb095e45e22f1e2c8be053889a56ff))
+
 ## [1.7.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.6.0...v1.7.0) (2026-11-16)
 
 ### ✨ New Features
