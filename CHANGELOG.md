@@ -1,3 +1,9 @@
+## [1.9.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.9.0-dev.1...v1.9.0-dev.2) (2026-11-19)
+
+### 🐛 Bug Fixes
+
+* **reddit:** keep same-subreddit media on Following and other feeds ([#37](https://github.com/bin0culars/bin0culars-patches/issues/37)) ([94fa252](https://github.com/bin0culars/bin0culars-patches/commit/94fa252df0f00429ab46f8d7fbe5ae0c8b061970))
+
 ## [1.9.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.8.0...v1.9.0-dev.1) (2026-11-19)
 
 ### ✨ New Features
