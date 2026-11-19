@@ -22,13 +22,16 @@ public final class SameSubredditMediaPatch {
         List<?> seeds = seedsOf(mediaContext);
         Object type = listingTypeOf(mediaContext);
         String name = type instanceof Enum ? ((Enum<?>) type).name() : null;
-        if (seeds != null && seeds.size() == 1 && ("HOME".equals(name) || "POPULAR".equals(name) || "SUBREDDIT".equals(name))) {
+        if (seeds != null && seeds.size() == 1 && name != null && !isProfileFeed(name)) {
             activeSubredditId = String.valueOf(seeds.get(0));
             return !"SUBREDDIT".equals(name);
-        } else {
-            activeSubredditId = null;
-            return false;
         }
+        activeSubredditId = null;
+        return false;
+    }
+
+    private static boolean isProfileFeed(String name) {
+        return "USER_SUBMITTED".equals(name) || "SUBMITTED_POSTS".equals(name);
     }
 
     public static void filterResults(Object listing) {
