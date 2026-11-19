@@ -20,13 +20,13 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.classDefBy
 import app.morphe.patcher.patch.patch
 
-private const val EXTENSION_CLASS = "Lapp/bin0culars/extension/reddit/GlobalContentFilterPatch;"
+internal const val EXTENSION_CLASS = "Lapp/bin0culars/extension/reddit/GlobalContentFilterPatch;"
 
 @Suppress("unused")
 val globalContentFilterPatch =
     patch(
         name = "Global content filter",
-        description = "Show only SFW or only NSFW posts in every feed and in search. Turn it on in Settings → bin0culars mods.",
+        description = "Show only SFW or only NSFW posts in every feed, in search and in full-screen media. Turn it on in Settings → bin0culars mods.",
         default = true,
     ) {
         compatibleWith(COMPATIBILITY_REDDIT)
@@ -36,10 +36,14 @@ val globalContentFilterPatch =
         execute {
             registerSettings()
             val dataSourceType = hookFeedPages()
+            hookFullscreenMedia()
             fillIsPostContainerBridge()
             fillChildrenBridge()
             fillFeedTypeBridge(dataSourceType)
             fillIndicatorListBridge()
+            fillSearchPostNsfwBridge()
+            fillSearchCommunityNsfwBridge()
+            fillLinkOver18Bridge()
         }
     }
 
@@ -50,7 +54,7 @@ private fun registerSettings() {
             section = BinocularsModsSection.FEED,
             title = "Global content filter",
             summary =
-            "Show only SFW or only NSFW posts in every feed and in search. Hides posts Reddit already sent; it never unblurs or unlocks anything. Some pages show fewer posts, and with Only NSFW a feed can end early if your account gets few NSFW posts. Pull to refresh after changing it.",
+            "Show only SFW or only NSFW posts in every feed, in search and in full-screen media. Only SFW also hides NSFW communities in search. Hides posts Reddit already sent; it never unblurs or unlocks anything. Some pages show fewer posts, and with Only NSFW a feed can end early if your account gets few NSFW posts. Pull to refresh after changing it.",
             choices = listOf(
                 BinocularsModsChoice("sfw", "Only SFW"),
                 BinocularsModsChoice("default", "Default"),
@@ -90,7 +94,7 @@ private fun hookFeedPages(): String {
     return param0Type
 }
 
-private fun fillBridge(name: String, smali: String) {
+internal fun fillBridge(name: String, smali: String) {
     Fingerprint(definingClass = EXTENSION_CLASS, name = name).method.addInstructions(0, smali)
 }
 
