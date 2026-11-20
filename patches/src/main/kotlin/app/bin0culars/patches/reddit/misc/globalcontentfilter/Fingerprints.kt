@@ -91,6 +91,16 @@ object SearchTypeaheadListFeedElementFingerprint : Fingerprint(
     ),
 )
 
+object SearchTypeaheadSuggestionFeedElementFingerprint : Fingerprint(
+    name = "toString",
+    returnType = "Ljava/lang/String;",
+    filters = listOf(
+        string(", id="),
+        string("SearchTypeaheadSuggestionFeedElement(identifier="),
+        fieldAccess(opcode = Opcode.IGET_OBJECT, type = "Ljava/lang/String;"),
+    ),
+)
+
 object RedditFeedPagerLoadFingerprint : Fingerprint(
     definingClass = "Lcom/reddit/feeds/impl/domain/paging/RedditFeedPager\$load\$1\$2;",
     name = "invokeSuspend",

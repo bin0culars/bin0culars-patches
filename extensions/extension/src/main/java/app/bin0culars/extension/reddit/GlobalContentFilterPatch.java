@@ -169,7 +169,7 @@ public final class GlobalContentFilterPatch {
                         } else {
                             String sectionId = typeaheadSectionId(element, 0);
                             if (sectionId != null) {
-                                if (!isSfw || !NSFW_TYPEAHEAD_SECTION.equals(sectionId)) {
+                                if (!isSfw || (!NSFW_TYPEAHEAD_SECTION.equals(sectionId) && !sectionId.endsWith(NSFW_TYPEAHEAD_SECTION))) {
                                     result.add(element);
                                 }
                             } else {

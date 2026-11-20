@@ -127,15 +127,23 @@ internal fun fillLinkOver18Bridge() {
 }
 
 internal fun fillTypeaheadSectionIdBridge() {
-    val elementType = SearchTypeaheadListFeedElementFingerprint.classDef.type
-    val idField = SearchTypeaheadListFeedElementFingerprint.instructionMatches.last().fieldReference
+    val listType = SearchTypeaheadListFeedElementFingerprint.classDef.type
+    val listIdField = SearchTypeaheadListFeedElementFingerprint.instructionMatches.last().fieldReference
+    val suggestionType = SearchTypeaheadSuggestionFeedElementFingerprint.classDef.type
+    val suggestionIdField = SearchTypeaheadSuggestionFeedElementFingerprint.instructionMatches.last().fieldReference
 
     val smali = """
         if-eqz p0, :null_id
-        instance-of p1, p0, $elementType
+        instance-of p1, p0, $listType
+        if-eqz p1, :try_suggestion
+        check-cast p0, $listType
+        iget-object p0, p0, $listType->${listIdField.name}:Ljava/lang/String;
+        return-object p0
+        :try_suggestion
+        instance-of p1, p0, $suggestionType
         if-eqz p1, :null_id
-        check-cast p0, $elementType
-        iget-object p0, p0, $elementType->${idField.name}:Ljava/lang/String;
+        check-cast p0, $suggestionType
+        iget-object p0, p0, $suggestionType->${suggestionIdField.name}:Ljava/lang/String;
         return-object p0
         :null_id
         const/4 p0, 0x0
