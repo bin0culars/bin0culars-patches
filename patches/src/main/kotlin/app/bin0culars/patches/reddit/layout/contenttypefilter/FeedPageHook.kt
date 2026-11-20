@@ -27,13 +27,13 @@ private fun isPageConstructor(params: List<String>): Boolean {
     return params.size == expected.size && expected.withIndex().all { (i, t) -> t == null || params[i] == t }
 }
 
-private fun findPageConstructorIndex(instructions: List<Instruction>, from: Int): Int =
+internal fun findPageConstructorIndex(instructions: List<Instruction>, from: Int): Int =
     instructions.withIndex().drop(from).firstOrNull { (_, i) ->
         (i.opcode == Opcode.INVOKE_DIRECT || i.opcode == Opcode.INVOKE_DIRECT_RANGE) &&
             i.methodRef()?.let { it.name == "<init>" && isPageConstructor(it.parameterTypes.map(CharSequence::toString)) } == true
     }?.index ?: throw PatchException("Could not find 7-param constructor after getData")
 
-private fun listRegisterOf(instruction: Instruction): Int =
+internal fun listRegisterOf(instruction: Instruction): Int =
     (instruction as? RegisterRangeInstruction)?.let { it.startRegister + 1 }
         ?: throw PatchException("Unsupported constructor instruction: ${instruction.javaClass.name}")
 
@@ -48,7 +48,7 @@ private fun hasMoveObject(instructions: List<Instruction>, destReg: Int, srcReg:
             (instr as? TwoRegisterInstruction)?.let { it.registerA == destReg && it.registerB == srcReg } == true
     }
 
-private fun findDataSourceRegister(
+internal fun findDataSourceRegister(
     instructions: List<Instruction>,
     end: Int,
     dataSourceType: String,
@@ -75,7 +75,7 @@ private fun buildFilterPageInstruction(
     throw PatchException("Registers must be < 16: list=$listRegister, ds=$dataSourceRegister, req=$requestRegister")
 }
 
-private fun findPageKeyField(requestType: String): String {
+internal fun findPageKeyField(requestType: String): String {
     val tagMethod = FeedPageBuildFingerprint.classDef.methods.firstOrNull { method ->
         method.implementation?.instructions?.any { instr ->
             instr.opcode == Opcode.NEW_INSTANCE &&
