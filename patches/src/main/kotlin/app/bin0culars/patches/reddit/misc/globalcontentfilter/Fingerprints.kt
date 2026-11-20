@@ -90,3 +90,13 @@ object SearchTypeaheadListFeedElementFingerprint : Fingerprint(
         fieldAccess(opcode = Opcode.IGET_OBJECT, type = "Ljava/lang/String;"),
     ),
 )
+
+object RedditFeedPagerLoadFingerprint : Fingerprint(
+    definingClass = "Lcom/reddit/feeds/impl/domain/paging/RedditFeedPager\$load\$1\$2;",
+    name = "invokeSuspend",
+)
+
+object RedditCachedFeedPagerLoadFingerprint : Fingerprint(
+    definingClass = "Lcom/reddit/feeds/impl/domain/paging/RedditCachedFeedPager\$load\$2;",
+    name = "invokeSuspend",
+)

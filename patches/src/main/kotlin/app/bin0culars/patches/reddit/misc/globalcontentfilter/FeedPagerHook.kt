@@ -7,6 +7,8 @@ import app.morphe.patcher.patch.classDefBy
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
 internal fun hookFeedPagers() {
     val cachedPager = RedditCachedFeedPagerFingerprint.classDef
@@ -17,6 +19,9 @@ internal fun hookFeedPagers() {
             hookInitMethod(method)
         }
     }
+
+    hookPagerLoad(RedditFeedPagerLoadFingerprint.method)
+    hookPagerLoad(RedditCachedFeedPagerLoadFingerprint.method)
 
     val retryInterface = findRetryInterface(cachedPager)
         ?: findRetryInterface(feedPager)
@@ -32,6 +37,27 @@ internal fun hookFeedPagers() {
         feedPagerFeedTypeField,
     )
     fillPagerRetryBridge(retryInterface)
+}
+
+private fun hookPagerLoad(method: MutableMethod) {
+    val instructions = method.instructions.toList()
+    val indices = instructions.indices.filter { i ->
+        val instr = instructions[i]
+        val fieldRef = (instr as? ReferenceInstruction)?.reference as? FieldReference
+        instr.opcode == Opcode.SGET_OBJECT &&
+            fieldRef?.definingClass == "Lkotlin/Unit;" &&
+            fieldRef?.type == "Lkotlin/Unit;" &&
+            instructions.getOrNull(i + 1)?.opcode == Opcode.RETURN_OBJECT
+    }
+    if (indices.isEmpty()) {
+        throw PatchException("Could not find Unit return point in ${method.name}")
+    }
+    for (index in indices.reversed()) {
+        method.addInstructions(
+            index,
+            "invoke-static {}, $EXTENSION_CLASS->onPagerLoadFinished()V",
+        )
+    }
 }
 
 private fun feedTypeFieldName(pager: ClassDef): String =

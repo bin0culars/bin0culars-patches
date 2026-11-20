@@ -6,6 +6,7 @@ import app.bin0culars.extension.reddit.settings.BinocularsMods;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,11 +24,45 @@ public final class GlobalContentFilterPatch {
     private static final Set<Object> PAGERS =
             Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
+    private static final Set<String> PENDING_RETRY =
+            Collections.synchronizedSet(new HashSet<>());
+
     private static final Map<String, Integer> THIN_PAGE_COUNTERS = new HashMap<>();
 
     public static void registerPager(Object pager) {
         if (pager != null) {
             PAGERS.add(pager);
+        }
+    }
+
+    public static void onPagerLoadFinished() {
+        try {
+            Set<String> retryFeedTypes;
+            synchronized (PENDING_RETRY) {
+                if (PENDING_RETRY.isEmpty()) {
+                    return;
+                }
+                retryFeedTypes = new HashSet<>(PENDING_RETRY);
+                PENDING_RETRY.clear();
+            }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                try {
+                    List<Object> pagersCopy;
+                    synchronized (PAGERS) {
+                        pagersCopy = new ArrayList<>(PAGERS);
+                    }
+                    for (Object pager : pagersCopy) {
+                        if (pager != null) {
+                            Object feedType = pagerFeedType(pager, 0);
+                            if (feedType instanceof Enum && retryFeedTypes.contains(((Enum<?>) feedType).name())) {
+                                pagerRetry(pager, 0);
+                            }
+                        }
+                    }
+                } catch (Throwable ignored) {
+                }
+            });
+        } catch (Throwable ignored) {
         }
     }
 
@@ -164,21 +199,9 @@ public final class GlobalContentFilterPatch {
                     }
                 }
                 if (shouldRetry) {
-                    final Object targetFeedType = pageFeedType;
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        try {
-                            List<Object> pagersCopy;
-                            synchronized (PAGERS) {
-                                pagersCopy = new ArrayList<>(PAGERS);
-                            }
-                            for (Object pager : pagersCopy) {
-                                if (pager != null && pagerFeedType(pager, 0) == targetFeedType) {
-                                    pagerRetry(pager, 0);
-                                }
-                            }
-                        } catch (Throwable ignored) {
-                        }
-                    });
+                    synchronized (PENDING_RETRY) {
+                        PENDING_RETRY.add(feedTypeName);
+                    }
                 }
             }
 
