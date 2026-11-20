@@ -26,7 +26,7 @@ internal const val EXTENSION_CLASS = "Lapp/bin0culars/extension/reddit/GlobalCon
 val globalContentFilterPatch =
     patch(
         name = "Global content filter",
-        description = "Show only SFW or only NSFW posts in every feed, in search and in full-screen media. Turn it on in Settings → bin0culars mods.",
+        description = "Experimental: show only SFW or only NSFW posts in every feed, in search and in full-screen media. Turn it on in Settings → bin0culars mods.",
         default = true,
     ) {
         compatibleWith(COMPATIBILITY_REDDIT)
@@ -52,9 +52,9 @@ private fun registerSettings() {
         BinocularsModsSetting(
             key = "global_content_filter",
             section = BinocularsModsSection.FEED,
-            title = "Global content filter",
+            title = "Global content filter (experimental)",
             summary =
-            "Show only SFW or only NSFW posts in every feed, in search and in full-screen media. Only SFW also hides NSFW communities in search. Hides posts Reddit already sent; it never unblurs or unlocks anything. Some pages show fewer posts, and with Only NSFW a feed can end early if your account gets few NSFW posts. Pull to refresh after changing it.",
+            "Experimental. Show only SFW or only NSFW posts in every feed, in search and in full-screen media; Only SFW also hides NSFW communities in search. Posts are hidden after Reddit sends them (nothing is unblurred or unlocked), so some feeds can look blank or end early, especially with Only NSFW. Pull to refresh after changing it, or switch back to Default if a feed stays empty.",
             choices = listOf(
                 BinocularsModsChoice("sfw", "Only SFW"),
                 BinocularsModsChoice("default", "Default"),
