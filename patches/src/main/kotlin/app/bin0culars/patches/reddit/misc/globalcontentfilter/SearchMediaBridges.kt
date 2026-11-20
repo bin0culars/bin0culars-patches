@@ -125,3 +125,21 @@ internal fun fillLinkOver18Bridge() {
     """.trimIndent()
     fillBridge("linkOver18", smali)
 }
+
+internal fun fillTypeaheadSectionIdBridge() {
+    val elementType = SearchTypeaheadListFeedElementFingerprint.classDef.type
+    val idField = SearchTypeaheadListFeedElementFingerprint.instructionMatches.last().fieldReference
+
+    val smali = """
+        if-eqz p0, :null_id
+        instance-of p1, p0, $elementType
+        if-eqz p1, :null_id
+        check-cast p0, $elementType
+        iget-object p0, p0, $elementType->${idField.name}:Ljava/lang/String;
+        return-object p0
+        :null_id
+        const/4 p0, 0x0
+        return-object p0
+    """.trimIndent()
+    fillBridge("typeaheadSectionId", smali)
+}

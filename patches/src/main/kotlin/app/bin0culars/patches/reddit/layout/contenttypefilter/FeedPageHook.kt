@@ -75,7 +75,7 @@ private fun buildFilterPageInstruction(
     throw PatchException("Registers must be < 16: list=$listRegister, ds=$dataSourceRegister, req=$requestRegister")
 }
 
-private fun findPageKeyField(requestType: String): String {
+internal fun findPageKeyField(requestType: String): String {
     val tagMethod = FeedPageBuildFingerprint.classDef.methods.firstOrNull { method ->
         method.implementation?.instructions?.any { instr ->
             instr.opcode == Opcode.NEW_INSTANCE &&

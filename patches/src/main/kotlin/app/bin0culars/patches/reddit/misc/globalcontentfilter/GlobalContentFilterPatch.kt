@@ -6,6 +6,7 @@ import app.bin0culars.patches.reddit.layout.contenttypefilter.PostElementFingerp
 import app.bin0culars.patches.reddit.layout.contenttypefilter.findChildrenMethod
 import app.bin0culars.patches.reddit.layout.contenttypefilter.findDataSourceRegister
 import app.bin0culars.patches.reddit.layout.contenttypefilter.findPageConstructorIndex
+import app.bin0culars.patches.reddit.layout.contenttypefilter.findPageKeyField
 import app.bin0culars.patches.reddit.layout.contenttypefilter.listRegisterOf
 import app.bin0culars.patches.reddit.misc.settings.BinocularsModsChoice
 import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSection
@@ -37,13 +38,16 @@ val globalContentFilterPatch =
             registerSettings()
             val dataSourceType = hookFeedPages()
             hookFullscreenMedia()
+            hookFeedPagers()
             fillIsPostContainerBridge()
             fillChildrenBridge()
             fillFeedTypeBridge(dataSourceType)
+            fillIsFirstPageBridge()
             fillIndicatorListBridge()
             fillSearchPostNsfwBridge()
             fillSearchCommunityNsfwBridge()
             fillLinkOver18Bridge()
+            fillTypeaheadSectionIdBridge()
         }
     }
 
@@ -54,7 +58,7 @@ private fun registerSettings() {
             section = BinocularsModsSection.FEED,
             title = "Global content filter (experimental)",
             summary =
-            "Experimental. Show only SFW or only NSFW posts in every feed, in search and in full-screen media; Only SFW also hides NSFW communities in search. Posts are hidden after Reddit sends them (nothing is unblurred or unlocked), so some feeds can look blank or end early, especially with Only NSFW. Pull to refresh after changing it, or switch back to Default if a feed stays empty.",
+            "Experimental. Show only SFW or only NSFW posts in every feed, in search and in full-screen media; Only SFW also hides NSFW communities in search. Posts are hidden after Reddit sends them (nothing is unblurred or unlocked). When a page has few matching posts the next one loads automatically, but feeds with very few matches can still look empty. Pull to refresh after changing it, or switch back to Default if a feed stays empty.",
             choices = listOf(
                 BinocularsModsChoice("sfw", "Only SFW"),
                 BinocularsModsChoice("default", "Default"),
@@ -77,16 +81,17 @@ private fun hookFeedPages(): String {
     val implementation = pageBuildMethod.implementation
         ?: throw PatchException("Method ${pageBuildMethod.name} has no implementation")
     val p0Register = implementation.registerCount - 3
+    val requestRegister = implementation.registerCount - 2
     val dataSourceRegister = findDataSourceRegister(pageInstructions, injectionIndex, param0Type, p0Register)
 
-    if (listRegister >= 16 || dataSourceRegister >= 16) {
-        throw PatchException("Registers must be < 16: list=$listRegister, ds=$dataSourceRegister")
+    if (listRegister >= 16 || dataSourceRegister >= 16 || requestRegister >= 16) {
+        throw PatchException("Registers must be < 16: list=$listRegister, ds=$dataSourceRegister, req=$requestRegister")
     }
 
     pageBuildMethod.addInstructions(
         injectionIndex,
         """
-            invoke-static { v$listRegister, v$dataSourceRegister }, $EXTENSION_CLASS->filterPage(Ljava/util/List;Ljava/lang/Object;)Ljava/util/List;
+            invoke-static { v$listRegister, v$dataSourceRegister, v$requestRegister }, $EXTENSION_CLASS->filterPage(Ljava/util/List;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
             move-result-object v$listRegister
         """.trimIndent(),
     )
@@ -147,6 +152,24 @@ private fun fillFeedTypeBridge(dataSourceType: String) {
         return-object p0
     """.trimIndent()
     fillBridge("feedType", smali)
+}
+
+private fun fillIsFirstPageBridge() {
+    val requestType = FeedPageBuildFingerprint.method.parameterTypes[1].toString()
+    val fieldName = findPageKeyField(requestType)
+
+    val smali = """
+        if-eqz p0, :no
+        check-cast p0, $requestType
+        iget-object p0, p0, $requestType->$fieldName:Ljava/lang/String;
+        if-nez p0, :no
+        const/4 p1, 0x1
+        return p1
+        :no
+        const/4 p1, 0x0
+        return p1
+    """.trimIndent()
+    fillBridge("isFirstPage", smali)
 }
 
 private fun fillIndicatorListBridge() {
