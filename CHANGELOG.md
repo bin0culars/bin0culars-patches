@@ -1,3 +1,9 @@
+## [1.10.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.10.0-dev.1...v1.10.0-dev.2) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **reddit:** support Reddit 2026.47.0 ([#41](https://github.com/bin0culars/bin0culars-patches/issues/41)) ([9f6f0bc](https://github.com/bin0culars/bin0culars-patches/commit/9f6f0bc2ba97b85f332156f4eab7db5f216070e0))
+
 ## [1.10.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.9.0...v1.10.0-dev.1) (2026-11-20)
 
 ### ✨ New Features
