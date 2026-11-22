@@ -1,3 +1,9 @@
+## [1.12.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.12.0-dev.1...v1.12.0-dev.2) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** Collapse all comments ([#54](https://github.com/bin0culars/bin0culars-patches/issues/54)) ([823f628](https://github.com/bin0culars/bin0culars-patches/commit/823f628fe777a7ac32b596279f6b818623762a26))
+
 ## [1.12.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0...v1.12.0-dev.1) (2026-11-22)
 
 ### ✨ New Features
