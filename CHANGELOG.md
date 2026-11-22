@@ -4,6 +4,12 @@
 
 * **reddit:** add swipe up for comments option ([#49](https://github.com/bin0culars/bin0culars-patches/issues/49)) ([4bdde78](https://github.com/bin0culars/bin0culars-patches/commit/4bdde7806cb92a57abd954e06d80e8f9eaf311c6))
 
+## [1.11.0-dev.6](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.5...v1.11.0-dev.6) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** add swipe up for comments option ([#49](https://github.com/bin0culars/bin0culars-patches/issues/49)) ([4bdde78](https://github.com/bin0culars/bin0culars-patches/commit/4bdde7806cb92a57abd954e06d80e8f9eaf311c6))
+
 ## [1.11.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.4...v1.11.0-dev.5) (2026-11-22)
 
 ### ✨ New Features
