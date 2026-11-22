@@ -1,3 +1,9 @@
+## [1.11.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.1...v1.11.0-dev.2) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** add swipeable home feed tabs ([#45](https://github.com/bin0culars/bin0culars-patches/issues/45)) ([02eb48d](https://github.com/bin0culars/bin0culars-patches/commit/02eb48d34a137fe18f356c9441902285dcdc5d44))
+
 ## [1.11.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.10.0...v1.11.0-dev.1) (2026-11-22)
 
 ### ✨ New Features
