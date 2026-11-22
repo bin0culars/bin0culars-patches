@@ -1,3 +1,9 @@
+## [1.11.0-dev.7](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.6...v1.11.0-dev.7) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** ask to restart when leaving bin0culars mods after a change ([#50](https://github.com/bin0culars/bin0culars-patches/issues/50)) ([fb9ff59](https://github.com/bin0culars/bin0culars-patches/commit/fb9ff59cf362a6821bc4ea5da9d146e57b0555df))
+
 ## [1.11.0-dev.6](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.5...v1.11.0-dev.6) (2026-11-22)
 
 ### ✨ New Features
