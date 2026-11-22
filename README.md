@@ -4,7 +4,7 @@ Patches for apps patched with [Morphe](https://morphe.software), made by bin0cul
 
 ## ❓ About
 
-bin0culars patches provides quality-of-life and layout modifications for third-party Android applications. The initial patch set targets Reddit, adding responsive tablet layout improvements designed to work seamlessly alongside Morphe's official Reddit patches.
+bin0culars patches adds quality-of-life and layout changes to Android apps. It currently targets Reddit: tablet layouts, feed and comment tweaks, media and sharing improvements. Everything is built to work alongside Morphe's own Reddit patches.
 
 ### How to use these patches
 
@@ -49,27 +49,33 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 
 <!-- PATCHES_END -->
 
-## 📱 Reddit: Tablet grid feed
+## 📱 Reddit
 
-Displays a multi-column masonry grid (2–3 columns depending on screen width) on tablets and wide screens. Supported feeds include Home, Popular, Latest, News, communities, Following, and custom feeds. Phones and comments remain unchanged.
+### Highlights
 
-To toggle:
-1. Open Reddit Settings → **bin0culars mods** → Tablet grid feed (this row replaces the "Reddit rules" link).
-2. Restart Reddit to apply changes.
+- **Tablets:** a 2–3 column grid feed on wide screens, and posts that open in a side panel in landscape while the feed stays visible.
+- **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, and Hide always available in the post menu.
+- **Posts and comments:** the full-screen reply editor with the parent comment visible (select and quote its text), and AutoModerator comments shown, collapsed or hidden.
+- **Media:** swipe up for comments in the video player, and full-screen media that stays in the subreddit you opened.
+- **Sharing:** share the post's image, video or text instead of its link, and download every item of a gallery at once.
+- **Privacy:** choose whether the account switcher offers Anonymous Browsing or Incognito.
 
-- **Tested version:** 2026.45.0
-- **Tip:** Pairs well with Morphe's "Start as guest" and "Hide ads" patches.
+### Settings
+
+All Reddit patches are controlled from Reddit Settings → **bin0culars mods** (this row replaces the "Reddit rules" link). Settings are grouped into Feed, Posts and comments, Media viewer, Links and sharing, and Privacy. Some changes need a restart; Reddit offers one when you leave the screen.
+
+Tested on Reddit 2026.45.0, 2026.46.0 and 2026.47.0.
 
 ### Use with Morphe's Reddit patches
 
-Morphe Manager's simple mode patches each app from one source. To combine this patch with Morphe's own Reddit patches (for example Start as guest or Hide ads), turn on **Expert mode** in Morphe Manager's settings.
+Morphe Manager's simple mode patches each app from one source. To combine these patches with Morphe's own Reddit patches (for example Start as guest or Hide ads), turn on **Expert mode** in Morphe Manager's settings.
 
 1. Settings → Expert mode.
 2. Tap Reddit and choose the app version.
-3. On the patch selection screen, each source has its own tab: keep **Tablet grid feed** in the bin0culars-patches tab and pick the patches you want in the Morphe Patches tab (tap "source hidden" if that tab is not shown).
+3. On the patch selection screen, each source has its own tab: pick the patches you want in the bin0culars-patches tab and in the Morphe Patches tab (tap "source hidden" if that tab is not shown).
 4. Tap Patch and confirm **Proceed anyway** on the "Multiple patch sources selected" notice.
 
-Tested together with Morphe's Start as guest and Hide ads on Reddit 2026.45.0. Reddit settings then show both a **bin0culars mods** and a **Morphe** entry.
+Reddit settings then show both a **bin0culars mods** and a **Morphe** entry.
 
 ## 🐛 Issues and requests
 
