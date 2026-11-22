@@ -1,3 +1,9 @@
+## [1.12.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0...v1.12.0-dev.1) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** download all items of a gallery from the share sheet ([#51](https://github.com/bin0culars/bin0culars-patches/issues/51)) ([50c9c7e](https://github.com/bin0culars/bin0culars-patches/commit/50c9c7edf2d24e9a4ff3aab79fa1db3e95ac9f23))
+
 ## [1.11.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.10.0...v1.11.0) (2026-11-22)
 
 ### ✨ New Features

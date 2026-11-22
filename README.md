@@ -17,9 +17,9 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.11.0](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.11.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;12 patches total
+> **[v1.12.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.12.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;13 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;12 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;13 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
@@ -35,6 +35,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [Always show Hide](#always-show-hide) | Keeps the Hide option in the post menu on Home, even when Reddit swaps it for recommendation options. Turn it on in Settings → bin0culars mods. |  |
 | [AutoModerator comments](#automoderator-comments) | Collapses or hides comments from u/AutoModerator. Choose in Settings → bin0culars mods. |  |
 | [Content-type filter](#content-type-filter) | Show only videos, images, text or link posts on Home and Popular. |  |
+| [Download all from gallery](#download-all-from-gallery) | Tapping Download on a gallery post asks whether to save just the current item or every item in the gallery. |  |
 | [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods. |  |
 | [Full-screen reply](#full-screen-reply) | Opens replies in the older full-screen editor that shows the comment you're replying to, so you can select and quote its text. Turn it on in Settings → bin0culars mods. |  |
 | [Home feed tabs](#home-feed-tabs) | Adds swipeable For You, Following and Popular tabs to the home feed. Turn it on in Settings → bin0culars mods. |  |
