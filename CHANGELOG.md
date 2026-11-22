@@ -1,3 +1,9 @@
+## [1.11.0-dev.4](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.3...v1.11.0-dev.4) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** keep Hide in the post menu ([#47](https://github.com/bin0culars/bin0culars-patches/issues/47)) ([81c2318](https://github.com/bin0culars/bin0culars-patches/commit/81c231842a0530847e6546de99db76e9fe003cf7))
+
 ## [1.11.0-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.2...v1.11.0-dev.3) (2026-11-22)
 
 ### 🐛 Bug Fixes
