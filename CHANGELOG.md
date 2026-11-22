@@ -1,3 +1,9 @@
+## [1.11.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.10.0...v1.11.0-dev.1) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** collapse or hide AutoModerator comments ([#43](https://github.com/bin0culars/bin0culars-patches/issues/43)) ([384fce1](https://github.com/bin0culars/bin0culars-patches/commit/384fce1ef073b59308f7e801c164b24e2a1b3cfc))
+
 ## [1.10.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.9.0...v1.10.0) (2026-11-21)
 
 ### ✨ New Features
