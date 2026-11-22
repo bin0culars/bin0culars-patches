@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -637,6 +638,11 @@ public final class BinocularsMods {
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT
                     ));
+                    choiceLabelView.setMaxWidth((int) (dialogContext.getResources().getDisplayMetrics().widthPixels * 0.4f));
+                    choiceLabelView.setMaxLines(2);
+                    choiceLabelView.setEllipsize(TextUtils.TruncateAt.END);
+                    choiceLabelView.setGravity(Gravity.END);
+                    choiceLabelView.setPaddingRelative(dp(dialogContext, 12), 0, 0, 0);
                     choiceLabelView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     if (colorAccent != 0) {
                         choiceLabelView.setTextColor(colorAccent);
