@@ -1,8 +1,8 @@
 {
-  "created_at": "2026-11-22T10:16:50",
-  "description": "## [1.11.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.4...v1.11.0-dev.5) (2026-11-22)\n\n### ✨ New Features\n\n* **reddit:** add full-screen reply option ([#48](https://github.com/bin0culars/bin0culars-patches/issues/48)) ([68931d1](https://github.com/bin0culars/bin0culars-patches/commit/68931d13902bfa940913c26fec6523cc650c5f34))",
-  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.11.0-dev.5/patches-1.11.0-dev.5.mpp",
+  "created_at": "2026-11-22T10:19:31",
+  "description": "## [1.11.0-dev.6](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.5...v1.11.0-dev.6) (2026-11-22)\n\n### ✨ New Features\n\n* **reddit:** add swipe up for comments option ([#49](https://github.com/bin0culars/bin0culars-patches/issues/49)) ([4bdde78](https://github.com/bin0culars/bin0culars-patches/commit/4bdde7806cb92a57abd954e06d80e8f9eaf311c6))",
+  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.11.0-dev.6/patches-1.11.0-dev.6.mpp",
   "signature_download_url": "",
-  "version": "1.11.0-dev.5",
+  "version": "1.11.0-dev.6",
   "public_key": "7zOu5+RSa1gkn+eAEQhYTyfc+ounL+lp73Y0awetm30="
 }
