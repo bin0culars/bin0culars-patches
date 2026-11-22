@@ -1,3 +1,9 @@
+## [1.11.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.4...v1.11.0-dev.5) (2026-11-22)
+
+### ✨ New Features
+
+* **reddit:** add full-screen reply option ([#48](https://github.com/bin0culars/bin0culars-patches/issues/48)) ([68931d1](https://github.com/bin0culars/bin0culars-patches/commit/68931d13902bfa940913c26fec6523cc650c5f34))
+
 ## [1.11.0-dev.4](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.3...v1.11.0-dev.4) (2026-11-22)
 
 ### ✨ New Features

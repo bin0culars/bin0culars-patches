@@ -17,9 +17,9 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.11.0-dev.4](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.11.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
+> **[v1.11.0-dev.5](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.11.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
@@ -36,6 +36,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [AutoModerator comments](#automoderator-comments) | Collapses or hides comments from u/AutoModerator. Choose in Settings → bin0culars mods. |  |
 | [Content-type filter](#content-type-filter) | Show only videos, images, text or link posts on Home and Popular. |  |
 | [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods. |  |
+| [Full-screen reply](#full-screen-reply) | Opens replies in the older full-screen editor that shows the comment you're replying to, so you can select and quote its text. Turn it on in Settings → bin0culars mods. |  |
 | [Home feed tabs](#home-feed-tabs) | Adds swipeable For You, Following and Popular tabs to the home feed. Turn it on in Settings → bin0culars mods. |  |
 | [Post side panel](#post-side-panel) | On tablets in landscape, opens posts in a panel on the right while the feed stays visible. Can be turned off in Settings → bin0culars mods. |  |
 | [Same-subreddit full-screen media](#same-subreddit-full-screen-media) | Lets full-screen videos and images show only posts from the subreddit you opened. Turn it on in Settings → bin0culars mods. |  |
