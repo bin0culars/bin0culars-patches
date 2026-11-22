@@ -1,8 +1,8 @@
 {
-  "created_at": "2026-11-21T05:45:14",
-  "description": "## [1.10.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.9.0...v1.10.0) (2026-11-21)\n\n### ✨ New Features\n\n* **reddit:** global content filter (experimental) ([#38](https://github.com/bin0culars/bin0culars-patches/issues/38)) ([ad531ad](https://github.com/bin0culars/bin0culars-patches/commit/ad531ad13d3bf649fb34c2729c04a0fc77f0ff94))\n\n### 🐛 Bug Fixes\n\n* **reddit:** support Reddit 2026.47.0 ([#41](https://github.com/bin0culars/bin0culars-patches/issues/41)) ([9f6f0bc](https://github.com/bin0culars/bin0culars-patches/commit/9f6f0bc2ba97b85f332156f4eab7db5f216070e0))",
-  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.10.0/patches-1.10.0.mpp",
+  "created_at": "2026-11-22T10:49:30",
+  "description": "## [1.11.0-dev.7](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0-dev.6...v1.11.0-dev.7) (2026-11-22)\n\n### ✨ New Features\n\n* **reddit:** ask to restart when leaving bin0culars mods after a change ([#50](https://github.com/bin0culars/bin0culars-patches/issues/50)) ([fb9ff59](https://github.com/bin0culars/bin0culars-patches/commit/fb9ff59cf362a6821bc4ea5da9d146e57b0555df))",
+  "download_url": "https://github.com/bin0culars/bin0culars-patches/releases/download/v1.11.0-dev.7/patches-1.11.0-dev.7.mpp",
   "signature_download_url": "",
-  "version": "1.10.0",
+  "version": "1.11.0-dev.7",
   "public_key": "7zOu5+RSa1gkn+eAEQhYTyfc+ounL+lp73Y0awetm30="
 }
