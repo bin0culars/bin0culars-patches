@@ -1,6 +1,7 @@
 package app.bin0culars.patches.reddit.layout.hometabs
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.checkCast
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
@@ -36,4 +37,20 @@ object ForYouTabsFlagFingerprint : Fingerprint(
             name = "isEnabled",
         ),
     ),
+)
+
+object ForYouFollowingVariantFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Lcom/reddit/feeds/domain/features/ForYouFollowingVariant;",
+    parameters = listOf(),
+    filters = listOf(
+        methodCall(name = "getValue"),
+        checkCast("Lcom/reddit/feeds/domain/features/ForYouFollowingVariant;"),
+    ),
+)
+
+object PagerSwipeEnabledFingerprint : Fingerprint(
+    definingClass = "Lcom/reddit/feeds/domain/features/ForYouFollowingVariant;",
+    name = "isPagerSwipeEnabled",
+    returnType = "Z",
 )
