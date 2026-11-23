@@ -17,9 +17,9 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.13.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.13.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;17 patches total
+> **[v1.13.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.13.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;18 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;17 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;18 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
@@ -35,6 +35,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [Always show Hide](#always-show-hide) | Keeps the Hide option in the post menu on Home, even when Reddit swaps it for recommendation options. Turn it on in Settings → bin0culars mods. |  |
 | [AutoModerator comments](#automoderator-comments) | Collapses or hides comments from u/AutoModerator. Choose in Settings → bin0culars mods. |  |
 | [Collapse all comments](#collapse-all-comments) | Adds a button next to the comment count on a post that collapses or expands all comments. Choose what it collapses in Settings → bin0culars mods. |  |
+| [Colorize comment indent lines](#colorize-comment-indent-lines) | Gives each reply level in a comment thread its own line colour. Turn it on in Settings → bin0culars mods. |  |
 | [Content-type filter](#content-type-filter) | Show only videos, images, text or link posts on Home and Popular. |  |
 | [Disable bottom bar auto-hide](#disable-bottom-bar-auto-hide) | Keeps the bottom navigation bar visible while scrolling. Turn it on in Settings → bin0culars mods. |  |
 | [Disable home feed auto-refresh](#disable-home-feed-auto-refresh) | Stops the home feed from reloading and jumping to the top when you come back to the app. Turn it on in Settings → bin0culars mods. |  |
