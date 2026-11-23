@@ -1,3 +1,9 @@
+## [1.13.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.12.0...v1.13.0-dev.1) (2026-11-23)
+
+### ✨ New Features
+
+* **reddit:** Disable bottom bar auto-hide, home feed auto-refresh and refresh on back to exit ([#55](https://github.com/bin0culars/bin0culars-patches/issues/55)) ([7e2a2f9](https://github.com/bin0culars/bin0culars-patches/commit/7e2a2f9850af95e2d922bdefb13bf51ec2493964))
+
 ## [1.12.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.11.0...v1.12.0) (2026-11-22)
 
 ### ✨ New Features
