@@ -55,7 +55,8 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ### Highlights
 
 - **Tablets:** a 2–3 column grid feed on wide screens, and posts that open in a side panel in landscape while the feed stays visible.
-- **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, and Hide always available in the post menu.
+- **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, Hide always available in the post menu, and no surprise reloads: Home keeps its place when you come back to the app or press back to exit.
+- **Navigation:** keep the bottom bar visible while you scroll.
 - **Posts and comments:** a collapse/expand-all button next to the comment count (fold all comments, only replies, or only deep replies), the full-screen reply editor with the parent comment visible (select and quote its text), and AutoModerator comments shown, collapsed or hidden.
 - **Media:** swipe up for comments in the video player, and full-screen media that stays in the subreddit you opened.
 - **Sharing:** share the post's image, video or text instead of its link, and download every item of a gallery at once.
@@ -63,7 +64,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 
 ### Settings
 
-All Reddit patches are controlled from Reddit Settings → **bin0culars mods** (this row replaces the "Reddit rules" link). Settings are grouped into Feed, Posts and comments, Media viewer, Links and sharing, and Privacy. Some changes need a restart; Reddit offers one when you leave the screen.
+All Reddit patches are controlled from Reddit Settings → **bin0culars mods** (this row replaces the "Reddit rules" link). Settings are grouped into Feed, Posts and comments, Media viewer, Navigation, Links and sharing, and Privacy. Some changes need a restart; Reddit offers one when you leave the screen.
 
 Tested on Reddit 2026.45.0, 2026.46.0 and 2026.47.0.
 
