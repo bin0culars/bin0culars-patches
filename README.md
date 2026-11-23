@@ -17,9 +17,9 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.12.0](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.12.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;14 patches total
+> **[v1.13.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.13.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;18 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;18 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
@@ -35,7 +35,11 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [Always show Hide](#always-show-hide) | Keeps the Hide option in the post menu on Home, even when Reddit swaps it for recommendation options. Turn it on in Settings → bin0culars mods. |  |
 | [AutoModerator comments](#automoderator-comments) | Collapses or hides comments from u/AutoModerator. Choose in Settings → bin0culars mods. |  |
 | [Collapse all comments](#collapse-all-comments) | Adds a button next to the comment count on a post that collapses or expands all comments. Choose what it collapses in Settings → bin0culars mods. |  |
+| [Colorize comment indent lines](#colorize-comment-indent-lines) | Gives each reply level in a comment thread its own line colour. Turn it on in Settings → bin0culars mods. |  |
 | [Content-type filter](#content-type-filter) | Show only videos, images, text or link posts on Home and Popular. |  |
+| [Disable bottom bar auto-hide](#disable-bottom-bar-auto-hide) | Keeps the bottom navigation bar visible while scrolling. Turn it on in Settings → bin0culars mods. |  |
+| [Disable home feed auto-refresh](#disable-home-feed-auto-refresh) | Stops the home feed from reloading and jumping to the top when you come back to the app. Turn it on in Settings → bin0culars mods. |  |
+| [Disable refresh on back to exit](#disable-refresh-on-back-to-exit) | Pressing back on the home feed exits without scrolling to the top and reloading. Turn it on in Settings → bin0culars mods. |  |
 | [Download all from gallery](#download-all-from-gallery) | Tapping Download on a gallery post asks whether to save just the current item or every item in the gallery. |  |
 | [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods. |  |
 | [Full-screen reply](#full-screen-reply) | Opens replies in the older full-screen editor that shows the comment you're replying to, so you can select and quote its text. Turn it on in Settings → bin0culars mods. |  |
@@ -55,15 +59,16 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ### Highlights
 
 - **Tablets:** a 2–3 column grid feed on wide screens, and posts that open in a side panel in landscape while the feed stays visible.
-- **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, and Hide always available in the post menu.
-- **Posts and comments:** a collapse/expand-all button next to the comment count (fold all comments, only replies, or only deep replies), the full-screen reply editor with the parent comment visible (select and quote its text), and AutoModerator comments shown, collapsed or hidden.
+- **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, Hide always available in the post menu, and no surprise reloads: Home keeps its place when you come back to the app or press back to exit.
+- **Navigation:** keep the bottom bar visible while you scroll.
+- **Posts and comments:** a collapse/expand-all button next to the comment count (fold all comments, only replies, or only deep replies), the full-screen reply editor with the parent comment visible (select and quote its text), AutoModerator comments shown, collapsed or hidden, and coloured comment lines (one colour per reply level; Rainbow, Pastel or Muted).
 - **Media:** swipe up for comments in the video player, and full-screen media that stays in the subreddit you opened.
 - **Sharing:** share the post's image, video or text instead of its link, and download every item of a gallery at once.
 - **Privacy:** choose whether the account switcher offers Anonymous Browsing or Incognito.
 
 ### Settings
 
-All Reddit patches are controlled from Reddit Settings → **bin0culars mods** (this row replaces the "Reddit rules" link). Settings are grouped into Feed, Posts and comments, Media viewer, Links and sharing, and Privacy. Some changes need a restart; Reddit offers one when you leave the screen.
+All Reddit patches are controlled from Reddit Settings → **bin0culars mods** (this row replaces the "Reddit rules" link). Settings are grouped into Feed, Posts and comments, Media viewer, Navigation, Links and sharing, and Privacy. Some changes need a restart; Reddit offers one when you leave the screen.
 
 Tested on Reddit 2026.45.0, 2026.46.0 and 2026.47.0.
 
