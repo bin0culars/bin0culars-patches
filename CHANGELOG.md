@@ -1,3 +1,9 @@
+## [1.14.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.13.0...v1.14.0-dev.1) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Glass navigation bar ([#58](https://github.com/bin0culars/bin0culars-patches/issues/58)) ([b006b57](https://github.com/bin0culars/bin0culars-patches/commit/b006b5722b09ed782be15e8b1eecadc8c795f85c))
+
 ## [1.13.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.12.0...v1.13.0) (2026-11-23)
 
 ### ✨ New Features

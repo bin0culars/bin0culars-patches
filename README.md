@@ -17,9 +17,9 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.13.0](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.13.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;18 patches total
+> **[v1.14.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.14.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;19 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;18 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;19 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
@@ -43,6 +43,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [Download all from gallery](#download-all-from-gallery) | Tapping Download on a gallery post asks whether to save just the current item or every item in the gallery. |  |
 | [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods. |  |
 | [Full-screen reply](#full-screen-reply) | Opens replies in the older full-screen editor that shows the comment you're replying to, so you can select and quote its text. Turn it on in Settings → bin0culars mods. |  |
+| [Glass navigation bar](#glass-navigation-bar) | Turns the bottom navigation bar (the side rail on tablets) into a floating see-through capsule. Turn it on in Settings → bin0culars mods. |  |
 | [Home feed tabs](#home-feed-tabs) | Adds swipeable For You, Following and Popular tabs to the home feed. Turn it on in Settings → bin0culars mods. |  |
 | [Post side panel](#post-side-panel) | On tablets in landscape, opens posts in a panel on the right while the feed stays visible. Can be turned off in Settings → bin0culars mods. |  |
 | [Same-subreddit full-screen media](#same-subreddit-full-screen-media) | Lets full-screen videos and images show only posts from the subreddit you opened. Turn it on in Settings → bin0culars mods. |  |
