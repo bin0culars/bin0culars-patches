@@ -40,6 +40,15 @@ object SideNavRailFingerprint : Fingerprint(
     ),
 )
 
+object SideNavRailContentFingerprint : Fingerprint(
+    returnType = "Ljava/lang/Object;",
+    parameters = listOf("Ljava/lang/Object;", "Ljava/lang/Object;", "Ljava/lang/Object;"),
+    filters = listOf(
+        literal(0x43fa0000),
+        literal(0x42800000),
+    ),
+)
+
 object NavScreenContentStateToStringFingerprint : Fingerprint(
     name = "toString",
     returnType = "Ljava/lang/String;",

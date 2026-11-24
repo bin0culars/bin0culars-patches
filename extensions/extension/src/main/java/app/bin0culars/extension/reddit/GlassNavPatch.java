@@ -17,23 +17,10 @@ public final class GlassNavPatch {
     private static final float RAIL_TAB_HEIGHT_DP = 64f;
     private static final float RAIL_GAP_DP = 12f;
 
-    private static final long[] COLOR_CACHE = new long[18];
-
     private static volatile Context appContext;
     private static volatile float cachedDensity = -1f;
     private static volatile Boolean cachedIsDark;
     private static volatile int railTabCount;
-
-    static {
-        for (int t = 0; t < 3; t++) {
-            for (int o = 0; o < 3; o++) {
-                for (int d = 0; d < 2; d++) {
-                    int idx = (t * 6) + (o * 2) + d;
-                    COLOR_CACHE[idx] = computeColor(t, o, d == 1);
-                }
-            }
-        }
-    }
 
     private static final Function1<Object, Object> BAR_DRAW =
             new Function1<Object, Object>() {
@@ -173,6 +160,24 @@ public final class GlassNavPatch {
         }
     }
 
+    public static Object barModifier(Object modifier) {
+        try {
+            if (!BinocularsMods.isEnabled("glass_navigation")) {
+                return modifier;
+            }
+            int width = BinocularsMods.getInt("glass_navigation_width");
+            if (width == 100) {
+                return modifier;
+            }
+            float density = getDensity();
+            float screenWidthDp = Resources.getSystem().getDisplayMetrics().widthPixels / density;
+            float pad = screenWidthDp * (100 - width) / 200f;
+            return padding(modifier, pad, 0f, pad, 0f, 0);
+        } catch (Throwable ignored) {
+            return modifier;
+        }
+    }
+
     private static Context getApplicationContext() {
         if (appContext != null) {
             return appContext;
@@ -205,55 +210,26 @@ public final class GlassNavPatch {
         return isAppNightMode();
     }
 
-    private static long computeColor(int tintIdx, int opacityIdx, boolean isDark) {
-        boolean effectiveDark;
-        if (tintIdx == 1) {
-            effectiveDark = false;
-        } else if (tintIdx == 2) {
-            effectiveDark = true;
-        } else {
-            effectiveDark = isDark;
-        }
-        int rgb = effectiveDark ? 0x1C1C1E : 0xF2F2F7;
-        int alpha;
-        if (opacityIdx == 0) {
-            alpha = 0x8C;
-        } else if (opacityIdx == 2) {
-            alpha = 0xE0;
-        } else {
-            alpha = 0xB8;
-        }
-        int argb = (alpha << 24) | rgb;
-        return ((long) argb & 0xFFFFFFFFL) << 32;
-    }
-
     private static long getCapsuleColor() {
         try {
             String tint = BinocularsMods.getChoice("glass_navigation_tint");
-            int tintIdx;
+            boolean effectiveDark;
             if ("light".equals(tint)) {
-                tintIdx = 1;
+                effectiveDark = false;
             } else if ("dark".equals(tint)) {
-                tintIdx = 2;
+                effectiveDark = true;
             } else {
-                tintIdx = 0;
+                effectiveDark = isDarkTheme();
             }
-
-            String opacity = BinocularsMods.getChoice("glass_navigation_opacity");
-            int opacityIdx;
-            if ("clear".equals(opacity)) {
-                opacityIdx = 0;
-            } else if ("frosted".equals(opacity)) {
-                opacityIdx = 2;
-            } else {
-                opacityIdx = 1;
-            }
-
-            int isDarkIdx = isDarkTheme() ? 1 : 0;
-            int index = (tintIdx * 6) + (opacityIdx * 2) + isDarkIdx;
-            return COLOR_CACHE[index];
+            int rgb = effectiveDark ? 0x1C1C1E : 0xF2F2F7;
+            int opacity = BinocularsMods.getInt("glass_navigation_opacity_percent");
+            int alpha = Math.round(255f * opacity / 100f);
+            int argb = (alpha << 24) | rgb;
+            return ((long) argb & 0xFFFFFFFFL) << 32;
         } catch (Throwable ignored) {
-            return COLOR_CACHE[1];
+            int alpha = Math.round(255f * 70f / 100f);
+            int argb = (alpha << 24) | 0x1C1C1E;
+            return ((long) argb & 0xFFFFFFFFL) << 32;
         }
     }
 
@@ -277,19 +253,25 @@ public final class GlassNavPatch {
     private static void drawBarCapsule(Object scope) {
         long size = drawScopeSize(scope);
         float width = Float.intBitsToFloat((int) (size >>> 32));
-        float height = Float.intBitsToFloat((int) size);
 
         float density = getDensity();
-        float left = 20f * density;
-        float capsuleWidth = width - 40f * density;
-        float capsuleHeight = (BAR_ROW_HEIGHT_DP + 10f) * density;
+        int widthPercent = BinocularsMods.getInt("glass_navigation_width");
+        float pad = width * (100 - widthPercent) / 200f;
+        float inset = 20f * density * widthPercent / 100f;
+        float left = pad + inset;
+        float capsuleWidth = width - (2f * pad) - (2f * inset);
+
+        int heightPercent = BinocularsMods.getInt("glass_navigation_height");
+        float capsuleHeight = (BAR_ROW_HEIGHT_DP + 10f) * density * heightPercent / 100f;
         float top = (BAR_ROW_HEIGHT_DP * density - capsuleHeight) / 2f;
 
         if (capsuleWidth <= 0f || capsuleHeight <= 0f) {
             return;
         }
 
-        float radius = capsuleHeight / 2f;
+        float radius = BinocularsMods.isEnabled("glass_navigation_round")
+                ? capsuleHeight / 2f
+                : 18f * density;
         long topLeft = packFloats(left, top);
         long capsuleSize = packFloats(capsuleWidth, capsuleHeight);
         long cornerRadius = packFloats(radius, radius);
@@ -326,13 +308,20 @@ public final class GlassNavPatch {
             return;
         }
 
-        float radius = capsuleWidth / 2f;
+        float radius = BinocularsMods.isEnabled("glass_navigation_round")
+                ? capsuleWidth / 2f
+                : 18f * density;
         long topLeft = packFloats(left, top);
         long capsuleSize = packFloats(capsuleWidth, capsuleHeight);
         long cornerRadius = packFloats(radius, radius);
         long color = getCapsuleColor();
 
         drawRoundRect(scope, color, topLeft, capsuleSize, cornerRadius, null, 1.0f, 0xF0);
+    }
+
+    private static Object padding(
+            Object modifier, float start, float top, float end, float bottom, int mask) {
+        return modifier;
     }
 
     private static void drawRoundRect(

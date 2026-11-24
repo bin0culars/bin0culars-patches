@@ -61,7 +61,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 
 - **Tablets:** a 2–3 column grid feed on wide screens, and posts that open in a side panel in landscape while the feed stays visible.
 - **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, Hide always available in the post menu, and no surprise reloads: Home keeps its place when you come back to the app or press back to exit.
-- **Navigation:** a floating see-through glass bar (side rail on tablets) with the feed scrolling underneath, in Auto, Light or Dark and three see-through levels; and keep the bottom bar visible while you scroll.
+- **Navigation:** a floating see-through glass bar (side rail on tablets) with the feed scrolling underneath, in Auto, Light or Dark, with sliders for opacity, height and width and a choice of round ends or corners; and keep the bottom bar visible while you scroll.
 - **Posts and comments:** a collapse/expand-all button next to the comment count (fold all comments, only replies, or only deep replies), the full-screen reply editor with the parent comment visible (select and quote its text), AutoModerator comments shown, collapsed or hidden, and coloured comment lines (one colour per reply level; Rainbow, Pastel or Muted).
 - **Media:** swipe up for comments in the video player, and full-screen media that stays in the subreddit you opened.
 - **Sharing:** share the post's image, video or text instead of its link, and download every item of a gallery at once.
