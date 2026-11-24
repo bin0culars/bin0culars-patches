@@ -151,8 +151,8 @@ internal fun findThemeRefs(
     )
 }
 
-internal fun fillBridge(name: String, smali: String) {
-    val method = Fingerprint(definingClass = EXTENSION_CLASS, name = name).method
+internal fun fillBridge(name: String, smali: String, extensionClass: String = EXTENSION_CLASS) {
+    val method = Fingerprint(definingClass = extensionClass, name = name).method
     for (i in method.instructions.indices.reversed()) {
         method.removeInstruction(i)
     }
