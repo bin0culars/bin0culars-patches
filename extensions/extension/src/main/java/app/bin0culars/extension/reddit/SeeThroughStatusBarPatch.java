@@ -274,26 +274,31 @@ public final class SeeThroughStatusBarPatch {
         }
 
         int rgb = ((int) (color >>> 32)) & 0x00FFFFFF;
-        for (int i = 0; i < 24; i++) {
-            float yTop = (float) h * i / 24f;
-            float yBottom = (float) h * (i + 1) / 24f;
-            float bandHeight = yBottom - yTop;
-            if (bandHeight <= 0f) {
-                continue;
+        int n = h;
+        int runStart = 0;
+        int runAlpha = 0;
+        for (int i = 0; i <= n; i++) {
+            int alpha = 0;
+            if (i < n) {
+                double t = (i + 0.5) / (double) n;
+                double factor = 0.92 * Math.pow(1.0 - t, 1.6);
+                alpha = Math.min(255, Math.max(0, (int) Math.round(255.0 * factor)));
             }
+            if (alpha != runAlpha) {
+                if (runAlpha > 0) {
+                    int bandArgb = (runAlpha << 24) | rgb;
+                    long bandColor = ((long) bandArgb & 0xFFFFFFFFL) << 32;
 
-            double t = (i + 0.5) / 24.0;
-            double factor = 0.92 * Math.pow(1.0 - t, 1.6);
-            int alpha = Math.min(255, Math.max(0, (int) Math.round(255.0 * factor)));
-            int bandArgb = (alpha << 24) | rgb;
-            long bandColor = ((long) bandArgb & 0xFFFFFFFFL) << 32;
+                    long topLeft = packFloats(0f, (float) runStart);
+                    long size = packFloats(width, (float) (i - runStart));
+                    long cornerRadius = packFloats(0f, 0f);
 
-            long topLeft = packFloats(0f, yTop);
-            long size = packFloats(width, bandHeight);
-            long cornerRadius = packFloats(0f, 0f);
-
-            GlassNavPatch.drawRoundRect(
-                    scope, bandColor, topLeft, size, cornerRadius, null, 1.0f, 0xF0);
+                    GlassNavPatch.drawRoundRect(
+                            scope, bandColor, topLeft, size, cornerRadius, null, 1.0f, 0xF0);
+                }
+                runStart = i;
+                runAlpha = alpha;
+            }
         }
     }
 
