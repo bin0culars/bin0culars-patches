@@ -1,3 +1,16 @@
+## [1.14.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.13.0...v1.14.0) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Customise the glass navigation bar ([#60](https://github.com/bin0culars/bin0culars-patches/issues/60)) ([3a2c2c0](https://github.com/bin0culars/bin0culars-patches/commit/3a2c2c06f3481b8e6614f2af300259a85536f203))
+* **reddit:** Glass navigation bar ([#58](https://github.com/bin0culars/bin0culars-patches/issues/58)) ([b006b57](https://github.com/bin0culars/bin0culars-patches/commit/b006b5722b09ed782be15e8b1eecadc8c795f85c))
+* **reddit:** Glass rail floats on the page background on tablets ([#61](https://github.com/bin0culars/bin0culars-patches/issues/61)) ([7c43e8b](https://github.com/bin0culars/bin0culars-patches/commit/7c43e8b5251262e77d0831565017484ee501e234))
+* **reddit:** See-through status bar ([#62](https://github.com/bin0culars/bin0culars-patches/issues/62)) ([85bb1ed](https://github.com/bin0culars/bin0culars-patches/commit/85bb1ed13632716fbe90ea9b9f58edec66db90e0))
+
+### 🐛 Bug Fixes
+
+* **reddit:** Smooth the see-through status bar fade ([#63](https://github.com/bin0culars/bin0culars-patches/issues/63)) ([ee9e051](https://github.com/bin0culars/bin0culars-patches/commit/ee9e051a7992952b1657b0e662964c438f4051ee))
+
 ## [1.14.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.4...v1.14.0-dev.5) (2026-11-24)
 
 ### 🐛 Bug Fixes
