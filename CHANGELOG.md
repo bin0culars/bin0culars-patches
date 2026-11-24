@@ -1,3 +1,9 @@
+## [1.14.0-dev.4](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.3...v1.14.0-dev.4) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** See-through status bar ([#62](https://github.com/bin0culars/bin0culars-patches/issues/62)) ([85bb1ed](https://github.com/bin0culars/bin0culars-patches/commit/85bb1ed13632716fbe90ea9b9f58edec66db90e0))
+
 ## [1.14.0-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.2...v1.14.0-dev.3) (2026-11-24)
 
 ### ✨ New Features
