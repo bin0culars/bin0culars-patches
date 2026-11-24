@@ -1,3 +1,9 @@
+## [1.16.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.1...v1.16.0-dev.2) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Bar position and Show labels for the glass navigation bar ([#70](https://github.com/bin0culars/bin0culars-patches/issues/70)) ([ae3cfff](https://github.com/bin0culars/bin0culars-patches/commit/ae3cffff05613f85590b0d9928289aab2836d79f))
+
 ## [1.16.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.15.0...v1.16.0-dev.1) (2026-11-24)
 
 ### ✨ New Features
