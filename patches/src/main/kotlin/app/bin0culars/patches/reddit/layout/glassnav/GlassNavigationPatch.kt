@@ -3,6 +3,7 @@ package app.bin0culars.patches.reddit.layout.glassnav
 import app.bin0culars.patches.reddit.misc.settings.BinocularsModsChoice
 import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSection.NAVIGATION
 import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSetting
+import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSlider
 import app.bin0culars.patches.reddit.misc.settings.addBinocularsModsSetting
 import app.bin0culars.patches.reddit.misc.settings.binocularsModsSettingsPatch
 import app.bin0culars.patches.reddit.shared.Constants.COMPATIBILITY_REDDIT
@@ -61,17 +62,60 @@ val glassNavigationPatch =
             )
             addBinocularsModsSetting(
                 BinocularsModsSetting(
-                    key = "glass_navigation_opacity",
+                    key = "glass_navigation_opacity_percent",
                     section = NAVIGATION,
                     parentKey = "glass_navigation",
-                    title = "See-through",
-                    summary = "Clear shows the most of the page behind the bar, Frosted the least.",
-                    choices = listOf(
-                        BinocularsModsChoice("clear", "Clear"),
-                        BinocularsModsChoice("balanced", "Balanced"),
-                        BinocularsModsChoice("frosted", "Frosted"),
+                    title = "Glass opacity",
+                    summary = "How solid the glass is. Lower shows more of the page behind the bar.",
+                    slider = BinocularsModsSlider(
+                        min = 0,
+                        max = 100,
+                        step = 5,
+                        unit = "%",
+                        default = 70,
                     ),
-                    defaultChoice = "balanced",
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
+                    key = "glass_navigation_round",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Round ends",
+                    summary = "Fully round ends. Off gives the glass softly rounded corners.",
+                    default = true,
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
+                    key = "glass_navigation_height",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Glass height",
+                    summary = "Phone only. Makes the glass taller or shorter around the buttons.",
+                    slider = BinocularsModsSlider(
+                        min = 70,
+                        max = 150,
+                        step = 5,
+                        unit = "%",
+                        default = 100,
+                    ),
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
+                    key = "glass_navigation_width",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Bar width",
+                    summary = "Phone only. Narrows the bar and its buttons towards the middle of the screen.",
+                    slider = BinocularsModsSlider(
+                        min = 50,
+                        max = 100,
+                        step = 5,
+                        unit = "%",
+                        default = 100,
+                    ),
                 ),
             )
 
@@ -92,7 +136,8 @@ val glassNavigationPatch =
             val lambdaType = findLambdaClassType(bottomNavBarMethod, drawBehindIndex, vF)
             val scopeRefs = findScopeRefs(lambdaType)
 
-            fillPlaceholders(scopeRefs)
+            val paddingRef = findPaddingRef()
+            fillPlaceholders(scopeRefs, paddingRef)
 
             val themeRefs = findThemeRefs(bottomNavBarMethod, surfaceIndex)
 
@@ -103,6 +148,7 @@ val glassNavigationPatch =
                 rColor,
                 rColorHigh,
             )
+            hookBarModifier(bottomNavBarMethod, bottomNavIndex)
             hookBarDraw(
                 bottomNavBarMethod,
                 drawBehindIndex,

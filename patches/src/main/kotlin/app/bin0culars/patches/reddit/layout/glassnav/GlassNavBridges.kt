@@ -31,7 +31,7 @@ internal fun MethodReference.toSmali(): String =
 internal fun FieldReference.toSmali(): String =
     "$definingClass->$name:$type"
 
-internal fun fillPlaceholders(scopeRefs: ScopeRefs) {
+internal fun fillPlaceholders(scopeRefs: ScopeRefs, paddingRef: MethodReference) {
     fillBridge(
         "drawRoundRect",
         """
@@ -56,6 +56,16 @@ internal fun fillPlaceholders(scopeRefs: ScopeRefs) {
             check-cast p0, ${scopeRefs.contentDrawScopeType}
             invoke-virtual { p0 }, ${scopeRefs.drawContentRef}
             return-void
+        """,
+    )
+    val modifierType = paddingRef.returnType
+    fillBridge(
+        "padding",
+        """
+            check-cast p0, $modifierType
+            invoke-static/range { p0 .. p5 }, ${paddingRef.toSmali()}
+            move-result-object p0
+            return-object p0
         """,
     )
 }
