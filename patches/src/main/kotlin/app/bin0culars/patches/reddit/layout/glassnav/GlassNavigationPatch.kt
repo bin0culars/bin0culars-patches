@@ -62,6 +62,20 @@ val glassNavigationPatch =
             )
             addBinocularsModsSetting(
                 BinocularsModsSetting(
+                    key = "glass_navigation_style",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Glass style",
+                    summary = "Tinted is a plain see-through colour. Frosted glass blurs what's behind the bar and adds a light edge (Android 14 and newer; older versions use Tinted).",
+                    choices = listOf(
+                        BinocularsModsChoice("tinted", "Tinted"),
+                        BinocularsModsChoice("frosted", "Frosted glass"),
+                    ),
+                    defaultChoice = "tinted",
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
                     key = "glass_navigation_opacity_percent",
                     section = NAVIGATION,
                     parentKey = "glass_navigation",
@@ -73,6 +87,22 @@ val glassNavigationPatch =
                         step = 5,
                         unit = "%",
                         default = 70,
+                    ),
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
+                    key = "glass_navigation_blur",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Blur strength",
+                    summary = "Frosted glass only. How strongly the bar blurs what's behind it.",
+                    slider = BinocularsModsSlider(
+                        min = 0,
+                        max = 100,
+                        step = 10,
+                        unit = "%",
+                        default = 60,
                     ),
                 ),
             )
@@ -162,6 +192,8 @@ val glassNavigationPatch =
             hookBottomNavBackdrop()
 
             hookBottomNavStrip(themeRefs)
+
+            hookGlassBlur(drawBehindRef)
         }
     }
 

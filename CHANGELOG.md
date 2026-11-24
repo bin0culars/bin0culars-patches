@@ -1,3 +1,9 @@
+## [1.15.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0...v1.15.0-dev.1) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Frosted glass style for the glass navigation bar ([#64](https://github.com/bin0culars/bin0culars-patches/issues/64)) ([1410970](https://github.com/bin0culars/bin0culars-patches/commit/1410970cb6e7b3b8dbf033c25494b5f789ca1789))
+
 ## [1.14.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.13.0...v1.14.0) (2026-11-24)
 
 ### ✨ New Features
