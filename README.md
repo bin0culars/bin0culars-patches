@@ -17,9 +17,9 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.15.0](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.15.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;20 patches total
+> **[v1.16.0-dev.1](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.16.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;21 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;20 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;21 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
@@ -51,6 +51,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [Share post content](#share-post-content) | App shortcuts and "Share via…" in the share sheet send the post's image, video or text instead of its link. |  |
 | [Swipe up for comments](#swipe-up-for-comments) | In the full-screen video player, swiping up opens the comments and the next video is a sideways swipe away. Turn it on in Settings → bin0culars mods. |  |
 | [Tablet grid feed](#tablet-grid-feed) | Shows the feed as a grid with 2 or 3 columns on tablets and other wide screens. Phones are unchanged. |  |
+| [Video playback speed](#video-playback-speed) | Adds Reddit's playback speed controls to the full-screen video player. Turn it on in Settings → bin0culars mods. |  |
 
 </details>
 

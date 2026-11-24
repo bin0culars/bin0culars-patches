@@ -1,3 +1,13 @@
+## [1.16.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.15.0...v1.16.0-dev.1) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Video playback speed ([#67](https://github.com/bin0culars/bin0culars-patches/issues/67)) ([4c88abc](https://github.com/bin0culars/bin0culars-patches/commit/4c88abc3be0a1229ad89da9e161a5429b3e0cfa3))
+
+### 🐛 Bug Fixes
+
+* **reddit:** Keep the frosted glass blur lined up while the bottom bar slides away ([#66](https://github.com/bin0culars/bin0culars-patches/issues/66)) ([4fb619d](https://github.com/bin0culars/bin0culars-patches/commit/4fb619d9c20041f7977ce6a81c03985c34b8c8f9))
+
 ## [1.15.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0...v1.15.0) (2026-11-24)
 
 ### ✨ New Features
