@@ -1,3 +1,9 @@
+## [1.14.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.4...v1.14.0-dev.5) (2026-11-24)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Smooth the see-through status bar fade ([#63](https://github.com/bin0culars/bin0culars-patches/issues/63)) ([ee9e051](https://github.com/bin0culars/bin0culars-patches/commit/ee9e051a7992952b1657b0e662964c438f4051ee))
+
 ## [1.14.0-dev.4](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.3...v1.14.0-dev.4) (2026-11-24)
 
 ### ✨ New Features
