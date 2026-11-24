@@ -1,3 +1,9 @@
+## [1.14.0-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.2...v1.14.0-dev.3) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Glass rail floats on the page background on tablets ([#61](https://github.com/bin0culars/bin0culars-patches/issues/61)) ([7c43e8b](https://github.com/bin0culars/bin0culars-patches/commit/7c43e8b5251262e77d0831565017484ee501e234))
+
 ## [1.14.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.1...v1.14.0-dev.2) (2026-11-24)
 
 ### ✨ New Features
