@@ -160,6 +160,8 @@ val glassNavigationPatch =
             hookNavScreenContentState()
 
             hookBottomNavBackdrop()
+
+            hookBottomNavStrip(themeRefs)
         }
     }
 

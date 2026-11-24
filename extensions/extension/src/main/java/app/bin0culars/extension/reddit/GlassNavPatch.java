@@ -98,6 +98,17 @@ public final class GlassNavPatch {
         }
     }
 
+    public static long pageColor(Object colors) {
+        try {
+            if (BinocularsMods.isEnabled("glass_navigation")) {
+                return feedColor(colors);
+            }
+            return stripColor(colors);
+        } catch (Throwable ignored) {
+            return stripColor(colors);
+        }
+    }
+
     public static void railThemeColor(long color) {
         try {
             updateDarkTheme(color);
@@ -339,4 +350,12 @@ public final class GlassNavPatch {
     }
 
     private static void drawContent(Object scope) {}
+
+    private static long feedColor(Object colors) {
+        return 0L;
+    }
+
+    private static long stripColor(Object colors) {
+        return 0L;
+    }
 }
