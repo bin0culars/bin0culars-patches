@@ -1,6 +1,7 @@
 package app.bin0culars.extension.reddit;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -151,8 +152,42 @@ public final class GlassBlur {
         }
     }
 
-    public static void onBarLift(int lift, float barHeight) {
-        barSlide = Math.max(0, Math.max(lift, Math.round(barHeight)) - lift);
+    public static int adjustBarLift(int lift, float barHeight, float fraction) {
+        int full = Math.max(lift, Math.round(barHeight));
+        int extra = 0;
+        try {
+            if (glassOn()) {
+                int liftDp = BinocularsMods.getInt("glass_navigation_lift_dp");
+                if (liftDp > 0) {
+                    float f = fraction >= 1f ? 1f : (fraction > 0f ? fraction : 0f);
+                    float density = Resources.getSystem().getDisplayMetrics().density;
+                    extra = Math.round(liftDp * density * f);
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        int adjusted = lift + extra;
+        barSlide = full - adjusted;
+        return adjusted;
+    }
+
+    public static int adjustBarY(int y, int height) {
+        int extra = 0;
+        try {
+            if (glassOn()) {
+                int liftDp = BinocularsMods.getInt("glass_navigation_lift_dp");
+                if (liftDp > 0) {
+                    float raw = height > 0 ? 1f - (float) y / height : 1f;
+                    float f = raw >= 1f ? 1f : (raw > 0f ? raw : 0f);
+                    float density = Resources.getSystem().getDisplayMetrics().density;
+                    extra = Math.round(liftDp * density * f);
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        int out = y - extra;
+        barSlide = out;
+        return out;
     }
 
     static void drawBar(Object scope, float left, float top, float cw, float ch, float radius) {

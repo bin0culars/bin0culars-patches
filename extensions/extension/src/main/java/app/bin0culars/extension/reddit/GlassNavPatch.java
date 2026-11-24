@@ -174,6 +174,16 @@ public final class GlassNavPatch {
         }
     }
 
+    public static boolean showLabel(boolean original) {
+        try {
+            return original
+                    && !(BinocularsMods.isEnabled("glass_navigation")
+                            && !BinocularsMods.isEnabled("glass_navigation_labels"));
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
     public static Object barModifier(Object modifier) {
         try {
             if (!BinocularsMods.isEnabled("glass_navigation")) {
