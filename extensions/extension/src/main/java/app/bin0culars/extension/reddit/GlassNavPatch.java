@@ -189,7 +189,7 @@ public final class GlassNavPatch {
         }
     }
 
-    private static Context getApplicationContext() {
+    static Context getApplicationContext() {
         if (appContext != null) {
             return appContext;
         }
@@ -244,7 +244,7 @@ public final class GlassNavPatch {
         }
     }
 
-    private static float getDensity() {
+    static float getDensity() {
         if (cachedDensity <= 0f) {
             try {
                 Context context = getApplicationContext();
@@ -335,7 +335,7 @@ public final class GlassNavPatch {
         return modifier;
     }
 
-    private static void drawRoundRect(
+    static void drawRoundRect(
             Object scope,
             long color,
             long topLeft,
@@ -345,11 +345,11 @@ public final class GlassNavPatch {
             float alpha,
             int mask) {}
 
-    private static long drawScopeSize(Object scope) {
+    static long drawScopeSize(Object scope) {
         return 0L;
     }
 
-    private static void drawContent(Object scope) {}
+    static void drawContent(Object scope) {}
 
     private static long feedColor(Object colors) {
         return 0L;
