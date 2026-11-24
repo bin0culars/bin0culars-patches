@@ -3,9 +3,11 @@ package app.bin0culars.patches.reddit.layout.glassnav
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.literal
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.opcode
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.Opcode
 
 internal const val EXTENSION_CLASS = "Lapp/bin0culars/extension/reddit/GlassNavPatch;"
 
@@ -76,5 +78,21 @@ object NavContentBoxFingerprint : Fingerprint(
         val p = method.parameterTypes.map { it.toString() }
         (p.size == 8 || p.size == 9) && p.take(4) == listOf("Z", "Z", "Z", "Z") &&
             p.contains("Landroidx/compose/runtime/internal/a;") && p.last() == "I"
+    },
+)
+
+object BottomBarSlideOffsetFingerprint : Fingerprint(
+    name = "invoke",
+    returnType = "Ljava/lang/Object;",
+    parameters = listOf("Ljava/lang/Object;"),
+    filters = listOf(
+        methodCall(definingClass = "Ljava/lang/Number;", name = "floatValue"),
+        methodCall(definingClass = "Ljava/lang/Math;", name = "max"),
+        opcode(Opcode.NEG_INT),
+        opcode(Opcode.INT_TO_LONG),
+        literal(0xffffffffL),
+    ),
+    custom = { _, classDef ->
+        classDef.fields.any { it.type == "Lcom/reddit/launch/bottomnav/BottomNavScreen;" }
     },
 )
