@@ -1,3 +1,9 @@
+## [1.14.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.14.0-dev.1...v1.14.0-dev.2) (2026-11-24)
+
+### ✨ New Features
+
+* **reddit:** Customise the glass navigation bar ([#60](https://github.com/bin0culars/bin0culars-patches/issues/60)) ([3a2c2c0](https://github.com/bin0culars/bin0culars-patches/commit/3a2c2c06f3481b8e6614f2af300259a85536f203))
+
 ## [1.14.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.13.0...v1.14.0-dev.1) (2026-11-24)
 
 ### ✨ New Features
