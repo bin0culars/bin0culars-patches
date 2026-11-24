@@ -21,6 +21,7 @@ public final class GlassNavPatch {
     private static volatile float cachedDensity = -1f;
     private static volatile Boolean cachedIsDark;
     private static volatile int railTabCount;
+    static volatile long lastPageColor;
 
     private static final Function1<Object, Object> BAR_DRAW =
             new Function1<Object, Object>() {
@@ -101,7 +102,9 @@ public final class GlassNavPatch {
     public static long pageColor(Object colors) {
         try {
             if (BinocularsMods.isEnabled("glass_navigation")) {
-                return feedColor(colors);
+                long c = feedColor(colors);
+                lastPageColor = c;
+                return c;
             }
             return stripColor(colors);
         } catch (Throwable ignored) {
@@ -213,7 +216,7 @@ public final class GlassNavPatch {
         }
     }
 
-    private static boolean isDarkTheme() {
+    static boolean isDarkTheme() {
         Boolean dark = cachedIsDark;
         if (dark != null) {
             return dark;
@@ -221,20 +224,27 @@ public final class GlassNavPatch {
         return isAppNightMode();
     }
 
-    private static long getCapsuleColor() {
+    static boolean glassIsDark() {
         try {
             String tint = BinocularsMods.getChoice("glass_navigation_tint");
-            boolean effectiveDark;
             if ("light".equals(tint)) {
-                effectiveDark = false;
+                return false;
             } else if ("dark".equals(tint)) {
-                effectiveDark = true;
-            } else {
-                effectiveDark = isDarkTheme();
+                return true;
             }
+            return isDarkTheme();
+        } catch (Throwable ignored) {
+            return isDarkTheme();
+        }
+    }
+
+    private static long getCapsuleColor() {
+        try {
+            boolean effectiveDark = glassIsDark();
             int rgb = effectiveDark ? 0x1C1C1E : 0xF2F2F7;
             int opacity = BinocularsMods.getInt("glass_navigation_opacity_percent");
-            int alpha = Math.round(255f * opacity / 100f);
+            float factor = GlassBlur.blurActive() ? 0.6f : 1.0f;
+            int alpha = Math.round(255f * opacity / 100f * factor);
             int argb = (alpha << 24) | rgb;
             return ((long) argb & 0xFFFFFFFFL) << 32;
         } catch (Throwable ignored) {
@@ -288,7 +298,9 @@ public final class GlassNavPatch {
         long cornerRadius = packFloats(radius, radius);
         long color = getCapsuleColor();
 
+        GlassBlur.drawBar(scope, left, top, capsuleWidth, capsuleHeight, radius);
         drawRoundRect(scope, color, topLeft, capsuleSize, cornerRadius, null, 1.0f, 0xF0);
+        GlassBlur.drawEdge(scope, left, top, capsuleWidth, capsuleHeight, radius);
     }
 
     private static void drawRailCapsule(Object scope) {
@@ -328,6 +340,7 @@ public final class GlassNavPatch {
         long color = getCapsuleColor();
 
         drawRoundRect(scope, color, topLeft, capsuleSize, cornerRadius, null, 1.0f, 0xF0);
+        GlassBlur.drawEdge(scope, left, top, capsuleWidth, capsuleHeight, radius);
     }
 
     private static Object padding(
