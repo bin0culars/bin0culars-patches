@@ -35,6 +35,7 @@ public final class GlassBlur {
     private static float barTop;
     private static float barW;
     private static float barH;
+    private static float barSlide;
 
     private static RenderNode blurNode;
     private static float cachedBlurRadius = -1f;
@@ -150,6 +151,10 @@ public final class GlassBlur {
         }
     }
 
+    public static void onBarLift(int lift, float barHeight) {
+        barSlide = Math.max(0, Math.max(lift, Math.round(barHeight)) - lift);
+    }
+
     static void drawBar(Object scope, float left, float top, float cw, float ch, float radius) {
         try {
             if (recording != null) {
@@ -170,7 +175,7 @@ public final class GlassBlur {
             float bh = Float.intBitsToFloat((int) size);
 
             barLeft = left;
-            barTop = (current.height - bh) + top;
+            barTop = (current.height - bh) + top + barSlide;
             barW = cw;
             barH = ch;
 
