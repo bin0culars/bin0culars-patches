@@ -164,3 +164,14 @@ object HomeScreenTopBarFingerprint : Fingerprint(
             } == true
     },
 )
+
+object HomeTabBarFingerprint : Fingerprint(
+    isStatic = true,
+    returnType = "V",
+    filters = listOf(
+        string("home_tab_bar"),
+    ),
+    custom = { method, _ ->
+        method.parameterTypes.any { it.toString() == "Lcom/reddit/listing/model/sort/SortType;" }
+    },
+)

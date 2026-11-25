@@ -16,6 +16,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 
 public final class GlassSearch {
 
@@ -23,6 +24,7 @@ public final class GlassSearch {
     private static final float CIRCLE_EXTRA_DP = 8f;
     private static final String BOTTOM_NAV_SCREEN = "com.reddit.launch.bottomnav.BottomNavScreen";
     private static final String BUTTON_TAG = "bin0culars_glass_search_button";
+    private static final String FADE_TAG = "bin0culars_glass_status_fade";
 
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
     private static final Set<Object> OVERLAY_SCREENS =
@@ -64,12 +66,14 @@ public final class GlassSearch {
     private static volatile WeakReference<Function0<?>> searchActionRef;
     private static volatile WeakReference<Activity> activityRef;
     private static volatile WeakReference<GlassSearchButton> buttonRef;
+    private static volatile WeakReference<GlassStatusFade> fadeRef;
     private static volatile WeakReference<View> bottomNavViewRef;
     private static volatile boolean hooksApplied;
     private static volatile boolean bottomNavAttached;
     private static volatile boolean showBottomNav = true;
     private static volatile float lastSlideDownPx;
     private static volatile boolean barAutoHidden;
+    private static volatile float lastCircleDiameterPx;
 
     private GlassSearch() {}
 
@@ -100,9 +104,63 @@ public final class GlassSearch {
         return ref != null ? ref.get() : null;
     }
 
+    static Activity getActivity() {
+        WeakReference<Activity> ref = activityRef;
+        return ref != null ? ref.get() : null;
+    }
+
+    static float getCircleDiameterPx() {
+        return lastCircleDiameterPx;
+    }
+
     static boolean isSearchButtonActive() {
-        Activity activity = activityRef != null ? activityRef.get() : null;
-        return isSettingEnabled() && hooksApplied && !isTablet(activity);
+        return isSettingEnabled() && hooksApplied && !isTablet(getActivity());
+    }
+
+    public static void setTabsHooksApplied() {
+        try {
+            GlassTopTabs.setHooksApplied();
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static Function2<?, ?, ?> wrapBelow(Function2<?, ?, ?> original) {
+        try {
+            return GlassTopTabs.wrapBelow(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
+    public static void inlineTabs(Object composer) {
+        try {
+            GlassTopTabs.inlineTabs(composer);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static Object tabsModifier(Object modifier) {
+        try {
+            return GlassTopTabs.tabsModifier(modifier);
+        } catch (Throwable ignored) {
+            return modifier;
+        }
+    }
+
+    public static float tabsTopPadding(float original) {
+        try {
+            return GlassTopTabs.tabsTopPadding(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
+    public static boolean tabsEvenly(boolean original) {
+        try {
+            return GlassTopTabs.tabsEvenly(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
     }
 
     public static void setHooksApplied() {
@@ -178,7 +236,8 @@ public final class GlassSearch {
             if (!isSettingEnabled()) {
                 return original;
             }
-            return 0L;
+            long pageColor = GlassNavPatch.lastPageColor;
+            return pageColor != 0L ? (pageColor | 0xFF00000000000000L) : original;
         } catch (Throwable ignored) {
             return original;
         }
@@ -254,12 +313,26 @@ public final class GlassSearch {
             FrameLayout content = (FrameLayout) contentView;
             View existing = content.findViewWithTag(BUTTON_TAG);
             GlassSearchButton button = existing instanceof GlassSearchButton ? (GlassSearchButton) existing : null;
+            View existingFade = content.findViewWithTag(FADE_TAG);
+            GlassStatusFade fade = existingFade instanceof GlassStatusFade ? (GlassStatusFade) existingFade : null;
 
             if (!isSearchButtonActive()) {
                 if (button != null) {
                     button.setVisibility(View.GONE);
                 }
+                if (fade != null) {
+                    fade.setVisibility(View.GONE);
+                }
                 return;
+            }
+
+            if (fade == null) {
+                fade = new GlassStatusFade(activity);
+                fade.setTag(FADE_TAG);
+                fade.setVisibility(View.GONE);
+                FrameLayout.LayoutParams fadeLp = new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT, 0, Gravity.TOP);
+                content.addView(fade, fadeLp);
             }
 
             if (button == null) {
@@ -271,14 +344,18 @@ public final class GlassSearch {
                         diameter, diameter, Gravity.BOTTOM | Gravity.END);
                 content.addView(button, lp);
                 final GlassSearchButton added = button;
+                final GlassStatusFade addedFade = fade;
                 content.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
                     if (r - l != or - ol || b - t != ob - ot) {
                         added.updateLayoutParams();
+                        addedFade.updateLayoutParams();
                         updateButtonState();
                     }
                 });
             }
 
+            fadeRef = new WeakReference<>(fade);
+            fade.updateLayoutParams();
             buttonRef = new WeakReference<>(button);
             button.updateLayoutParams();
             updateButtonState();
@@ -291,6 +368,10 @@ public final class GlassSearch {
             GlassSearchButton button = buttonRef != null ? buttonRef.get() : null;
             if (button != null) {
                 button.updateLayoutParams();
+            }
+            GlassStatusFade fade = fadeRef != null ? fadeRef.get() : null;
+            if (fade != null) {
+                fade.updateLayoutParams();
             }
             updateButtonState();
         } catch (Throwable ignored) {
@@ -320,10 +401,11 @@ public final class GlassSearch {
         }
         try {
             GlassSearchButton button = buttonRef != null ? buttonRef.get() : null;
-            if (button == null) {
+            GlassStatusFade fade = fadeRef != null ? fadeRef.get() : null;
+            if (button == null && fade == null) {
                 return;
             }
-            Context context = button.getContext();
+            Context context = button != null ? button.getContext() : fade.getContext();
             boolean shouldShow = isSearchButtonActive()
                     && !isTablet(context)
                     && getSearchAction() != null
@@ -331,22 +413,34 @@ public final class GlassSearch {
                     && showBottomNav
                     && OVERLAY_SCREENS.isEmpty();
             if (!shouldShow) {
-                if (button.getVisibility() != View.GONE) {
+                if (button != null && button.getVisibility() != View.GONE) {
                     button.setVisibility(View.GONE);
+                }
+                if (fade != null && fade.getVisibility() != View.GONE) {
+                    fade.setVisibility(View.GONE);
                 }
                 return;
             }
-            button.setTranslationY(lastSlideDownPx);
-            if (barAutoHidden) {
-                if (button.getVisibility() != View.INVISIBLE) {
-                    button.setVisibility(View.INVISIBLE);
+            if (fade != null) {
+                if (fade.getVisibility() != View.VISIBLE) {
+                    fade.setVisibility(View.VISIBLE);
                 }
-            } else {
-                if (button.getVisibility() != View.VISIBLE) {
-                    button.setVisibility(View.VISIBLE);
+                fade.updateLayoutParams();
+                fade.invalidate();
+            }
+            if (button != null) {
+                button.setTranslationY(lastSlideDownPx);
+                if (barAutoHidden) {
+                    if (button.getVisibility() != View.INVISIBLE) {
+                        button.setVisibility(View.INVISIBLE);
+                    }
+                } else {
+                    if (button.getVisibility() != View.VISIBLE) {
+                        button.setVisibility(View.VISIBLE);
+                    }
+                    button.updateLayoutParams();
+                    button.invalidate();
                 }
-                button.updateLayoutParams();
-                button.invalidate();
             }
         } catch (Throwable ignored) {
         }
@@ -371,16 +465,27 @@ public final class GlassSearch {
             rectWidth = diameter;
             rectHeight = diameter;
         }
+        if (Math.abs(width - height) <= 2f) {
+            lastCircleDiameterPx = rectHeight;
+        }
         float left = (width - rectWidth) / 2f;
         float top = (height - rectHeight) / 2f;
         float radius = rectHeight / 2f;
+        drawGlassCapsule(scope, left, top, rectWidth, rectHeight, radius);
+    }
+
+    static void drawGlassCapsule(Object scope, float left, float top, float width, float height, float radius) {
         long topLeft = packFloats(left, top);
-        long rectSize = packFloats(rectWidth, rectHeight);
+        long rectSize = packFloats(width, height);
         long cornerRadius = packFloats(radius, radius);
         long color = GlassNavPatch.getCapsuleColor();
-        GlassStyle.drawShadow(scope, left, top, rectWidth, rectHeight, radius);
+        GlassStyle.drawShadow(scope, left, top, width, height, radius);
         GlassNavPatch.drawRoundRect(scope, color, topLeft, rectSize, cornerRadius, null, 1.0f, 0xF0);
-        GlassStyle.drawOutline(scope, left, top, rectWidth, rectHeight, radius);
+        if (GlassStyle.isClear()) {
+            GlassBlur.drawEdge(scope, left, top, width, height, radius);
+        } else {
+            GlassStyle.drawOutline(scope, left, top, width, height, radius);
+        }
     }
 
     private static long packFloats(float x, float y) {
