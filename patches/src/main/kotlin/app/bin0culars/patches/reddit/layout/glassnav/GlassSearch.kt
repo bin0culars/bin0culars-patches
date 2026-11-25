@@ -27,6 +27,7 @@ internal fun hookGlassSearch() {
         hookHomeTopBar(topBarMethod, modifierType, topBarSites, topTabsSites)
         hookHomeScreenTopBar(bgSites)
         topTabsSites?.let { hookTopTabs(modifierType, it) }
+        hookGlassTopBarAtTop()
         navSites.constructorMethod?.addInstructions(
             0,
             "invoke-static/range { p1 .. p1 }, $SEARCH_EXTENSION_CLASS->onShowBottomNav(Z)V",

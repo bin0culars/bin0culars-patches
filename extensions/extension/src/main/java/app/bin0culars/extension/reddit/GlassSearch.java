@@ -245,13 +245,25 @@ public final class GlassSearch {
         }
     }
 
+    public static void onFeedAtTop(boolean atTop) {
+        try {
+            GlassTopBarState.onFeedAtTop(atTop);
+        } catch (Throwable ignored) {
+        }
+    }
+
     public static long topBarColor(long original) {
         try {
             if (!isSettingEnabled()) {
                 return original;
             }
             long pageColor = GlassNavPatch.lastPageColor;
-            return pageColor != 0L ? (pageColor | 0xFF00000000000000L) : original;
+            if (pageColor == 0L) {
+                return original;
+            }
+            return GlassTopBarState.isFeedAtTop()
+                    ? (pageColor | 0xFF00000000000000L)
+                    : (pageColor & 0x00FFFFFFFFFFFFFFL);
         } catch (Throwable ignored) {
             return original;
         }
