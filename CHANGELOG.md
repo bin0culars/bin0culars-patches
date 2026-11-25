@@ -1,3 +1,9 @@
+## [1.16.0-dev.11](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.10...v1.16.0-dev.11) (2026-11-25)
+
+### ✨ New Features
+
+* **reddit:** Frosted glass blur for the menu, tabs and avatar at the top of Home ([#82](https://github.com/bin0culars/bin0culars-patches/issues/82)) ([49817af](https://github.com/bin0culars/bin0culars-patches/commit/49817af9b921b5acbe90d26fea829e4db00978bc))
+
 ## [1.16.0-dev.10](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.9...v1.16.0-dev.10) (2026-11-25)
 
 ### 🐛 Bug Fixes
