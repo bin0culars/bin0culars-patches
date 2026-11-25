@@ -10,6 +10,8 @@ import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 internal const val EXTENSION_CLASS = "Lapp/bin0culars/extension/reddit/GlassNavPatch;"
 
@@ -128,4 +130,37 @@ object BottomBarSlidePlaceFingerprint : Fingerprint(
         opcode(Opcode.INT_TO_FLOAT, location = MatchAfterImmediately()),
         opcode(Opcode.MUL_FLOAT_2ADDR, location = MatchAfterImmediately()),
     ),
+)
+
+object HomeTopBarFingerprint : Fingerprint(
+    isStatic = true,
+    returnType = "V",
+    filters = listOf(
+        string("home_revamp_m1_app_bar"),
+        string("main_top_app_bar_search"),
+    ),
+)
+
+object HomeScreenTopBarFingerprint : Fingerprint(
+    isStatic = true,
+    returnType = "V",
+    filters = listOf(
+        methodCall(
+            definingClass = "Landroidx/compose/ui/graphics/",
+            parameters = listOf("L", "F", "F", "F", "F", "F", "L", "Z", "I", "I"),
+        ),
+    ),
+    custom = { method, _ ->
+        method.parameterTypes.any { it.toString() == "Lcom/reddit/listing/model/sort/SortType;" } &&
+            method.implementation?.instructions?.any { inst ->
+                val ref = (inst as? ReferenceInstruction)?.reference as? MethodReference
+                val p = ref?.parameterTypes?.map { it.toString() }
+                p != null &&
+                    p.size >= 4 &&
+                    p[0].startsWith("L") &&
+                    p[1] == "Lkotlin/jvm/functions/Function0;" &&
+                    p[2] == "Landroidx/compose/runtime/internal/a;" &&
+                    p[3] == "Landroidx/compose/runtime/internal/a;"
+            } == true
+    },
 )

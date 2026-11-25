@@ -150,6 +150,17 @@ val glassNavigationPatch =
             )
             addBinocularsModsSetting(
                 BinocularsModsSetting(
+                    key = "glass_navigation_search",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Search button",
+                    summary = "Moves search from the top of Home into a round glass button next to the bar. " +
+                        "The menu and avatar float as small glass circles over the feed. Phone only.",
+                    default = false,
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
                     key = "glass_navigation_lift_dp",
                     section = NAVIGATION,
                     parentKey = "glass_navigation",
@@ -222,6 +233,8 @@ val glassNavigationPatch =
             hookGlassBlur(drawBehindRef)
 
             hookNavLabels()
+
+            hookGlassSearch()
         }
     }
 

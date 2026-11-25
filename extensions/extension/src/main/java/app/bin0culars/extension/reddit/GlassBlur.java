@@ -24,7 +24,7 @@ public final class GlassBlur {
     // Upstream Morphe found that a blur render effect redrawn every frame can crash the app on Android 12/13.
     private static final int MIN_SDK = 34;
     private static final float MAX_BLUR_DP = 32f;
-    private static final float EDGE_DP = 1f;
+    static final float EDGE_DP = 1f;
 
     private static final Path CLIP_PATH = new Path();
     private static final WeakHashMap<View, Boolean> DECOR_VIEWS = new WeakHashMap<>();
@@ -152,41 +152,46 @@ public final class GlassBlur {
         }
     }
 
+    static int liftPx() {
+        try {
+            if (!glassOn()) {
+                return 0;
+            }
+            int liftDp = BinocularsMods.getInt("glass_navigation_lift_dp");
+            if (liftDp <= 0) {
+                return 0;
+            }
+            return Math.round(liftDp * GlassNavPatch.getDensity());
+        } catch (Throwable ignored) {
+            return 0;
+        }
+    }
+
     public static int adjustBarLift(int lift, float barHeight, float fraction) {
         int full = Math.max(lift, Math.round(barHeight));
+        int maxLift = liftPx();
         int extra = 0;
-        try {
-            if (glassOn()) {
-                int liftDp = BinocularsMods.getInt("glass_navigation_lift_dp");
-                if (liftDp > 0) {
-                    float f = fraction >= 1f ? 1f : (fraction > 0f ? fraction : 0f);
-                    float density = Resources.getSystem().getDisplayMetrics().density;
-                    extra = Math.round(liftDp * density * f);
-                }
-            }
-        } catch (Throwable ignored) {
+        if (maxLift > 0) {
+            float f = fraction >= 1f ? 1f : (fraction > 0f ? fraction : 0f);
+            extra = Math.round(maxLift * f);
         }
         int adjusted = lift + extra;
         barSlide = full - adjusted;
+        GlassSearch.onBarSlide(barSlide + maxLift, fraction <= 0f || (full > 0 && adjusted <= 0));
         return adjusted;
     }
 
     public static int adjustBarY(int y, int height) {
+        int maxLift = liftPx();
         int extra = 0;
-        try {
-            if (glassOn()) {
-                int liftDp = BinocularsMods.getInt("glass_navigation_lift_dp");
-                if (liftDp > 0) {
-                    float raw = height > 0 ? 1f - (float) y / height : 1f;
-                    float f = raw >= 1f ? 1f : (raw > 0f ? raw : 0f);
-                    float density = Resources.getSystem().getDisplayMetrics().density;
-                    extra = Math.round(liftDp * density * f);
-                }
-            }
-        } catch (Throwable ignored) {
+        if (maxLift > 0) {
+            float raw = height > 0 ? 1f - (float) y / height : 1f;
+            float f = raw >= 1f ? 1f : (raw > 0f ? raw : 0f);
+            extra = Math.round(maxLift * f);
         }
         int out = y - extra;
         barSlide = out;
+        GlassSearch.onBarSlide(barSlide + maxLift, height > 0 && y >= height);
         return out;
     }
 
@@ -323,6 +328,7 @@ public final class GlassBlur {
             if (activity == null || activity.getWindow() == null) {
                 return;
             }
+            GlassSearch.onActivityResumed(activity);
             View decorView = activity.getWindow().peekDecorView();
             if (decorView == null) {
                 decorView = activity.getWindow().getDecorView();
@@ -358,7 +364,7 @@ public final class GlassBlur {
     private static void setNativeCanvas(Object composeCanvas, Canvas canvas) {}
 
     @SuppressWarnings("rawtypes")
-    private static Object drawWithContent(Object modifier, Function1 block) {
+    static Object drawWithContent(Object modifier, Function1 block) {
         return modifier;
     }
 }
