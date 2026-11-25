@@ -1,3 +1,9 @@
+## [1.16.0-dev.4](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.3...v1.16.0-dev.4) (2026-11-25)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Same-subreddit media no longer gets stuck on a loading screen ([#73](https://github.com/bin0culars/bin0culars-patches/issues/73)) ([850e807](https://github.com/bin0culars/bin0culars-patches/commit/850e807b5df12421939999c31af589b4ad23bfbd))
+
 ## [1.16.0-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.2...v1.16.0-dev.3) (2026-11-25)
 
 ### ✨ New Features
