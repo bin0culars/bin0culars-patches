@@ -177,6 +177,46 @@ public final class GlassSearch {
         }
     }
 
+    public static long tabLabelFontSize() {
+        try {
+            return GlassTabLabel.tabLabelFontSize();
+        } catch (Throwable ignored) {
+            return 0L;
+        }
+    }
+
+    public static long tabLabelLineHeight() {
+        try {
+            return GlassTabLabel.tabLabelLineHeight();
+        } catch (Throwable ignored) {
+            return 0L;
+        }
+    }
+
+    public static int tabLabelMask(int original) {
+        try {
+            return GlassTabLabel.tabLabelMask(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
+    public static Object tabItemModifier(Object modifier) {
+        try {
+            return GlassTabLabel.tabItemModifier(modifier);
+        } catch (Throwable ignored) {
+            return modifier;
+        }
+    }
+
+    public static float tabItemTopPadding(float original) {
+        try {
+            return GlassTabLabel.tabItemTopPadding(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
     public static void setHooksApplied() {
         try {
             if (hooksApplied) {
@@ -518,7 +558,7 @@ public final class GlassSearch {
         return ((long) Float.floatToRawIntBits(x) << 32) | (Float.floatToRawIntBits(y) & 0xFFFFFFFFL);
     }
 
-    private static Object graphicsLayer(
+    static Object graphicsLayer(
             Object modifier,
             float scaleX,
             float scaleY,
