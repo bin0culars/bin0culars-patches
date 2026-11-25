@@ -21,7 +21,7 @@ import kotlin.jvm.functions.Function2;
 public final class GlassSearch {
 
     static final float BUTTON_GAP_DP = 10f;
-    private static final float CIRCLE_EXTRA_DP = 8f;
+    static final float CIRCLE_EXTRA_DP = 8f;
     private static final String BOTTOM_NAV_SCREEN = "com.reddit.launch.bottomnav.BottomNavScreen";
     private static final String BUTTON_TAG = "bin0culars_glass_search_button";
     private static final String FADE_TAG = "bin0culars_glass_status_fade";

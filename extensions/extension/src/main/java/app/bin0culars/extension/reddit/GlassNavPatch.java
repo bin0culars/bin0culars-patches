@@ -405,7 +405,7 @@ public final class GlassNavPatch {
         }
     }
 
-    private static Object padding(
+    static Object padding(
             Object modifier, float start, float top, float end, float bottom, int mask) {
         return modifier;
     }
