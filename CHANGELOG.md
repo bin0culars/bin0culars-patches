@@ -1,3 +1,9 @@
+## [1.16.0-dev.9](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.8...v1.16.0-dev.9) (2026-11-25)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Glass top bar follows the visible feed's own scroll position ([#79](https://github.com/bin0culars/bin0culars-patches/issues/79)) ([3a7981b](https://github.com/bin0culars/bin0culars-patches/commit/3a7981b6e6d763a9f8a99253dd6793b867860120))
+
 ## [1.16.0-dev.8](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.7...v1.16.0-dev.8) (2026-11-25)
 
 ### ✨ New Features
