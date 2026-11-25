@@ -10,6 +10,7 @@ import kotlin.jvm.functions.Function2;
 final class GlassTopTabs {
 
     private static final float TABS_WEIGHT = 1000f;
+    private static final float HEADER_TABS_HEIGHT_DP = 8f;
     private static final float CAPSULE_MARGIN_DP = 4f;
 
     private static final Map<Object, WeakReference<BelowWrapper>> BELOW_WRAPPERS =
@@ -140,16 +141,26 @@ final class GlassTopTabs {
             Object weight = weightModifier;
             if (weight == null) {
                 weight = newWeight(null, TABS_WEIGHT, true);
+                if (weight == null) {
+                    return modifier;
+                }
                 weightModifier = weight;
             }
-            Object weighted = thenModifier(weight, modifier);
-            Object wrapped = GlassBlur.drawWithContent(weighted, TABS_DRAW);
+            Object wrapped = GlassBlur.drawWithContent(weight, TABS_DRAW);
             synchronized (WRAPPED_TO_ORIG) {
                 WRAPPED_TO_ORIG.put(wrapped, new WeakReference<>(modifier));
             }
             return wrapped;
         } catch (Throwable ignored) {
             return modifier;
+        }
+    }
+
+    static float headerTabsHeight(float original) {
+        try {
+            return isTabsActive() ? HEADER_TABS_HEIGHT_DP : original;
+        } catch (Throwable ignored) {
+            return original;
         }
     }
 

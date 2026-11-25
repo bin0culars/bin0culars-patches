@@ -45,4 +45,5 @@ internal fun hookTopTabs(
             move-result p${sites.evenlyReg}
         """.trimIndent(),
     )
+    sites.headerTabsSites?.let(::hookHeaderTabsHeight)
 }
