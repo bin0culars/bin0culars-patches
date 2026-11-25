@@ -344,8 +344,8 @@ public final class GlassSearch {
             } else {
                 if (button.getVisibility() != View.VISIBLE) {
                     button.setVisibility(View.VISIBLE);
-                    button.updateLayoutParams();
                 }
+                button.updateLayoutParams();
                 button.invalidate();
             }
         } catch (Throwable ignored) {
@@ -378,7 +378,9 @@ public final class GlassSearch {
         long rectSize = packFloats(rectWidth, rectHeight);
         long cornerRadius = packFloats(radius, radius);
         long color = GlassNavPatch.getCapsuleColor();
+        GlassStyle.drawShadow(scope, left, top, rectWidth, rectHeight, radius);
         GlassNavPatch.drawRoundRect(scope, color, topLeft, rectSize, cornerRadius, null, 1.0f, 0xF0);
+        GlassStyle.drawOutline(scope, left, top, rectWidth, rectHeight, radius);
     }
 
     private static long packFloats(float x, float y) {

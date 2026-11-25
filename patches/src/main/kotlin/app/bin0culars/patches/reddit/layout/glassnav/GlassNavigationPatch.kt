@@ -92,6 +92,22 @@ val glassNavigationPatch =
             )
             addBinocularsModsSetting(
                 BinocularsModsSetting(
+                    key = "glass_navigation_strength",
+                    section = NAVIGATION,
+                    parentKey = "glass_navigation",
+                    title = "Glass strength",
+                    summary = "How clearly the glass stands out from the page. " +
+                        "Balanced adds a thin outline and a soft shadow; Solid makes the glass more opaque too.",
+                    choices = listOf(
+                        BinocularsModsChoice("clear", "Clear"),
+                        BinocularsModsChoice("balanced", "Balanced"),
+                        BinocularsModsChoice("solid", "Solid"),
+                    ),
+                    defaultChoice = "balanced",
+                ),
+            )
+            addBinocularsModsSetting(
+                BinocularsModsSetting(
                     key = "glass_navigation_blur",
                     section = NAVIGATION,
                     parentKey = "glass_navigation",
