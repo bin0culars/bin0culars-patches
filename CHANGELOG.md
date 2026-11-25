@@ -1,3 +1,9 @@
+## [1.16.0-dev.12](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.11...v1.16.0-dev.12) (2026-11-25)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Top bar turns see-through again as soon as the feed scrolls ([#83](https://github.com/bin0culars/bin0culars-patches/issues/83)) ([b7cb4ff](https://github.com/bin0culars/bin0culars-patches/commit/b7cb4ff84b9086abf23b811ab66c49b4ba07ecdd))
+
 ## [1.16.0-dev.11](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.10...v1.16.0-dev.11) (2026-11-25)
 
 ### ✨ New Features
