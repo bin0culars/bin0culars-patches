@@ -177,6 +177,14 @@ public final class GlassSearch {
         }
     }
 
+    public static float tabsRowPadding(float original) {
+        try {
+            return GlassTopTabs.isTabsActive() ? 2f : original;
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
     public static long tabLabelFontSize() {
         try {
             return GlassTabLabel.tabLabelFontSize();
@@ -288,6 +296,20 @@ public final class GlassSearch {
     public static void onFeedAtTop(boolean atTop) {
         try {
             GlassTopBarState.onFeedAtTop(atTop);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void registerFeed(Object listState, Object feedState) {
+        try {
+            GlassTopBarState.registerFeed(listState, feedState);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void registerFeedSwapped(Object feedState, Object listState) {
+        try {
+            GlassTopBarState.registerFeed(listState, feedState);
         } catch (Throwable ignored) {
         }
     }

@@ -49,4 +49,5 @@ internal fun hookTopTabs(
     sites.headerTabsSites?.let(::hookHeaderTabsHeight)
     sites.indicatorSites?.let { hookTabIndicator(modifierType, it) }
     hookTopTabsLabel(modifierType, sites)
+    hookTopTabsRowPadding(sites.tabBarMethod)
 }
