@@ -186,6 +186,14 @@ public final class GlassNavPatch {
         }
     }
 
+    public static Object navItemModifier(boolean selected, Object modifier) {
+        try {
+            return GlassPill.navItemModifier(selected, modifier);
+        } catch (Throwable ignored) {
+            return modifier;
+        }
+    }
+
     public static Object barModifier(Object modifier) {
         try {
             if (!BinocularsMods.isEnabled("glass_navigation")) {
@@ -199,7 +207,8 @@ public final class GlassNavPatch {
             int width = BinocularsMods.getInt("glass_navigation_width");
             float density = getDensity();
             float screenWidthDp = Resources.getSystem().getDisplayMetrics().widthPixels / density;
-            float pad = width == 100 ? 0f : screenWidthDp * (100 - width) / 200f;
+            float pad = (width == 100 ? 0f : screenWidthDp * (100 - width) / 200f)
+                    + capsuleInsetDp(width);
             float endPad = pad;
             if (GlassSearch.isSearchButtonActive()) {
                 endPad += GlassSearch.buttonDiameterDp() + GlassSearch.BUTTON_GAP_DP;
@@ -291,15 +300,19 @@ public final class GlassNavPatch {
         return cachedDensity;
     }
 
-    private static long packFloats(float x, float y) {
+    static long packFloats(float x, float y) {
         return ((long) Float.floatToRawIntBits(x) << 32) | (Float.floatToRawIntBits(y) & 0xFFFFFFFFL);
+    }
+
+    private static float capsuleInsetDp(int widthPercent) {
+        return 20f * widthPercent / 100f;
     }
 
     static float capsuleSideGapPx(float totalWidthPx) {
         float density = getDensity();
         int widthPercent = BinocularsMods.getInt("glass_navigation_width");
         float pad = totalWidthPx * (100 - widthPercent) / 200f;
-        float inset = 20f * density * widthPercent / 100f;
+        float inset = capsuleInsetDp(widthPercent) * density;
         return pad + inset;
     }
 

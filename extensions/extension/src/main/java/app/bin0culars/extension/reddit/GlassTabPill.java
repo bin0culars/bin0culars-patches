@@ -14,8 +14,6 @@ final class GlassTabPill {
     private static final int MAX_WALK_DEPTH = 5;
     private static final float PILL_INSET_X_DP = 2f;
     private static final float PILL_INSET_Y_DP = 4f;
-    private static final float LIGHT_PILL_ALPHA = 0.07f;
-    private static final float DARK_PILL_ALPHA = 0.14f;
 
     private static final Map<Object, Boolean> INDICATOR_MATCH_CACHE = new WeakHashMap<>();
     private static final ConcurrentHashMap<Class<?>, Field[]> DECLARED_FIELDS_CACHE =
@@ -178,24 +176,6 @@ final class GlassTabPill {
         }
         float pillTop = (h - (tabsHeight / 2f)) - (pillHeight / 2f);
         float radius = Math.min(pillWidth, pillHeight) / 2f;
-
-        boolean dark = GlassNavPatch.glassIsDark();
-        int alpha = Math.round(255f * (dark ? DARK_PILL_ALPHA : LIGHT_PILL_ALPHA));
-        int argb = (alpha << 24) | (dark ? 0xFFFFFF : 0x000000);
-        long color = ((long) argb & 0xFFFFFFFFL) << 32;
-
-        GlassNavPatch.drawRoundRect(
-                scope,
-                color,
-                packFloats(pillLeft, pillTop),
-                packFloats(pillWidth, pillHeight),
-                packFloats(radius, radius),
-                null,
-                1.0f,
-                0xF0);
-    }
-
-    private static long packFloats(float x, float y) {
-        return ((long) Float.floatToRawIntBits(x) << 32) | (Float.floatToRawIntBits(y) & 0xFFFFFFFFL);
+        GlassPill.drawPill(scope, pillLeft, pillTop, pillWidth, pillHeight, radius);
     }
 }
