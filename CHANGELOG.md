@@ -1,3 +1,9 @@
+## [1.16.0-dev.6](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.5...v1.16.0-dev.6) (2026-11-25)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Glass top bar tabs no longer clipped, no white band, steadier search button ([#75](https://github.com/bin0culars/bin0culars-patches/issues/75)) ([e862323](https://github.com/bin0culars/bin0culars-patches/commit/e8623230b01d020e713e76b45b8309fbeb03ebdd))
+
 ## [1.16.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.4...v1.16.0-dev.5) (2026-11-25)
 
 ### ✨ New Features
