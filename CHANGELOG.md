@@ -1,3 +1,9 @@
+## [1.16.0-dev.7](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.6...v1.16.0-dev.7) (2026-11-25)
+
+### ✨ New Features
+
+* **reddit:** iOS-style pill highlight for the glass tabs and bottom bar ([#77](https://github.com/bin0culars/bin0culars-patches/issues/77)) ([9e862c5](https://github.com/bin0culars/bin0culars-patches/commit/9e862c558d8b1193a0cc0c8cd89875466bef748c))
+
 ## [1.16.0-dev.6](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.5...v1.16.0-dev.6) (2026-11-25)
 
 ### 🐛 Bug Fixes
