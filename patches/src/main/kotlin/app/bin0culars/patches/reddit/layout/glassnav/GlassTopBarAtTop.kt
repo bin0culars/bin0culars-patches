@@ -56,4 +56,5 @@ internal fun hookGlassTopBarAtTop() {
         0,
         "invoke-static/range { p2 .. p2 }, $SEARCH_EXTENSION_CLASS->onFeedAtTop(Z)V",
     )
+    hookGlassFeedRegistry()
 }
