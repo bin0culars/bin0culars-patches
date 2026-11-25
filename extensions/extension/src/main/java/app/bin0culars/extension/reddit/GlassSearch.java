@@ -63,7 +63,7 @@ public final class GlassSearch {
         updateButtonState();
     };
 
-    private static volatile WeakReference<Function0<?>> searchActionRef;
+    private static volatile Function0<?> searchAction;
     private static volatile WeakReference<Activity> activityRef;
     private static volatile WeakReference<GlassSearchButton> buttonRef;
     private static volatile WeakReference<GlassStatusFade> fadeRef;
@@ -100,8 +100,7 @@ public final class GlassSearch {
     }
 
     private static Function0<?> getSearchAction() {
-        WeakReference<Function0<?>> ref = searchActionRef;
-        return ref != null ? ref.get() : null;
+        return searchAction;
     }
 
     static Activity getActivity() {
@@ -147,6 +146,14 @@ public final class GlassSearch {
         }
     }
 
+    public static float headerTabsHeight(float original) {
+        try {
+            return GlassTopTabs.headerTabsHeight(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
     public static float tabsTopPadding(float original) {
         try {
             return GlassTopTabs.tabsTopPadding(original);
@@ -188,7 +195,7 @@ public final class GlassSearch {
 
     public static void setSearchAction(Function0<?> action) {
         try {
-            searchActionRef = action != null ? new WeakReference<>(action) : null;
+            searchAction = action;
             postUpdateButtonState();
         } catch (Throwable ignored) {
         }

@@ -10,7 +10,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
-private const val SORT_TYPE = "Lcom/reddit/listing/model/sort/SortType;"
+internal const val SORT_TYPE = "Lcom/reddit/listing/model/sort/SortType;"
 private const val FUNCTION2_TYPE = "Lkotlin/jvm/functions/Function2;"
 private val BELOW_PARAM_TAIL = listOf("Z", "Z")
 
@@ -24,6 +24,7 @@ internal data class TopTabsSites(
     val wrapperPadReg: Int,
     val tabBarMethod: MutableMethod,
     val evenlyReg: Int,
+    val headerTabsSites: HeaderTabsSites?,
 )
 
 private fun paramRegisterIndex(method: Method, targetIndex: Int): Int {
@@ -118,6 +119,9 @@ private fun buildTopTabsSites(
     }
     val validIndices = evenlyIdx >= 0 && modIdx >= 0 && padIdx >= 0
     return if (validIndices && thenRef != null && wrapperMethod != null) {
+        val composerType = topBarMethod.parameterTypes
+            .getOrNull(topBarMethod.parameterTypes.size - 2)
+            ?.toString()
         TopTabsSites(
             belowParamReg = paramRegisterIndex(topBarMethod, belowIdx),
             vSearchComposer = vSearchComposer,
@@ -128,6 +132,7 @@ private fun buildTopTabsSites(
             wrapperPadReg = paramRegisterIndex(wrapperMethod, padIdx),
             tabBarMethod = tabBarMethod,
             evenlyReg = paramRegisterIndex(tabBarMethod, evenlyIdx),
+            headerTabsSites = composerType?.let { findHeaderTabsSites(tabBarMethod, it) },
         )
     } else {
         null
