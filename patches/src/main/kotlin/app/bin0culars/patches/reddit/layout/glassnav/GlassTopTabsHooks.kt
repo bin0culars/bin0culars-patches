@@ -34,16 +34,18 @@ internal fun hookTopTabs(
             invoke-static/range { p${sites.wrapperModReg} .. p${sites.wrapperModReg} }, $SEARCH_EXTENSION_CLASS->tabsModifier(Ljava/lang/Object;)Ljava/lang/Object;
             move-result-object p${sites.wrapperModReg}
             check-cast p${sites.wrapperModReg}, $modifierType
-            invoke-static/range { p${sites.wrapperPadReg} .. p${sites.wrapperPadReg} }, $SEARCH_EXTENSION_CLASS->tabsTopPadding(F)F
-            move-result p${sites.wrapperPadReg}
         """.trimIndent(),
     )
-    sites.tabBarMethod.addInstructions(
-        0,
-        """
-            invoke-static/range { p${sites.evenlyReg} .. p${sites.evenlyReg} }, $SEARCH_EXTENSION_CLASS->tabsEvenly(Z)Z
-            move-result p${sites.evenlyReg}
-        """.trimIndent(),
-    )
+    val tabBarSmali = buildString {
+        sites.indicatorSites?.let { indicator ->
+            append("invoke-static/range { p${indicator.pagerReg} .. p${indicator.pagerReg} }, ")
+            append("$SEARCH_EXTENSION_CLASS->setHomePager(Ljava/lang/Object;)V\n")
+        }
+        append("invoke-static/range { p${sites.evenlyReg} .. p${sites.evenlyReg} }, ")
+        append("$SEARCH_EXTENSION_CLASS->tabsEvenly(Z)Z\n")
+        append("move-result p${sites.evenlyReg}")
+    }
+    sites.tabBarMethod.addInstructions(0, tabBarSmali)
     sites.headerTabsSites?.let(::hookHeaderTabsHeight)
+    sites.indicatorSites?.let { hookTabIndicator(modifierType, it) }
 }

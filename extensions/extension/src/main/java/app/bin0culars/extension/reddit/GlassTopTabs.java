@@ -164,11 +164,21 @@ final class GlassTopTabs {
         }
     }
 
-    static float tabsTopPadding(float original) {
+    static void setHomePager(Object pager) {
         try {
-            return isTabsActive() ? 0f : original;
+            GlassTabPill.setHomePager(pager);
         } catch (Throwable ignored) {
-            return original;
+        }
+    }
+
+    static Object tabIndicatorModifier(Object modifier) {
+        try {
+            if (modifier == null || !isTabsActive()) {
+                return modifier;
+            }
+            return GlassTabPill.tabIndicatorModifier(modifier);
+        } catch (Throwable ignored) {
+            return modifier;
         }
     }
 
@@ -195,6 +205,7 @@ final class GlassTopTabs {
         if (rectWidth <= 0f || rectHeight <= 0f) {
             return;
         }
+        GlassTabPill.recordTabsBounds(height, rectHeight);
         float top = (height - rectHeight) / 2f;
         float radius = rectHeight / 2f;
         GlassSearch.drawGlassCapsule(scope, marginX, top, rectWidth, rectHeight, radius);

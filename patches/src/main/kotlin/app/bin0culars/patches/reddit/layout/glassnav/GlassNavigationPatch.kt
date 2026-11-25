@@ -250,6 +250,8 @@ val glassNavigationPatch =
 
             hookNavLabels()
 
+            hookNavPill()
+
             hookGlassSearch()
         }
     }

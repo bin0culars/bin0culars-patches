@@ -21,13 +21,13 @@ internal data class TopTabsSites(
     val thenRef: MethodReference,
     val wrapperMethod: MutableMethod,
     val wrapperModReg: Int,
-    val wrapperPadReg: Int,
     val tabBarMethod: MutableMethod,
     val evenlyReg: Int,
     val headerTabsSites: HeaderTabsSites?,
+    val indicatorSites: TabIndicatorSites?,
 )
 
-private fun paramRegisterIndex(method: Method, targetIndex: Int): Int {
+internal fun paramRegisterIndex(method: Method, targetIndex: Int): Int {
     var reg = if ((method.accessFlags and AccessFlags.STATIC.value) != 0) 0 else 1
     for (i in 0 until targetIndex) {
         val t = method.parameterTypes[i].toString()
@@ -111,13 +111,12 @@ private fun buildTopTabsSites(
     val origWrapper = HomeTabBarFingerprint.originalClassDef.methods
         .firstOrNull { isWrapperMethod(it, modifierType) }
     val modIdx = origWrapper?.parameterTypes?.indexOfFirst { it.toString() == modifierType } ?: -1
-    val padIdx = origWrapper?.parameterTypes?.indexOfFirst { it.toString() == "F" } ?: -1
     val thenRef = origWrapper?.let { findThenRef(topBarMethod, it, modifierType) }
     val wrapperMethod = origWrapper?.let { orig ->
         HomeTabBarFingerprint.classDef.methods
             .firstOrNull { it.name == orig.name && it.parameterTypes == orig.parameterTypes }
     }
-    val validIndices = evenlyIdx >= 0 && modIdx >= 0 && padIdx >= 0
+    val validIndices = evenlyIdx >= 0 && modIdx >= 0
     return if (validIndices && thenRef != null && wrapperMethod != null) {
         val composerType = topBarMethod.parameterTypes
             .getOrNull(topBarMethod.parameterTypes.size - 2)
@@ -129,10 +128,10 @@ private fun buildTopTabsSites(
             thenRef = thenRef,
             wrapperMethod = wrapperMethod,
             wrapperModReg = paramRegisterIndex(wrapperMethod, modIdx),
-            wrapperPadReg = paramRegisterIndex(wrapperMethod, padIdx),
             tabBarMethod = tabBarMethod,
             evenlyReg = paramRegisterIndex(tabBarMethod, evenlyIdx),
             headerTabsSites = composerType?.let { findHeaderTabsSites(tabBarMethod, it) },
+            indicatorSites = composerType?.let { findTabIndicatorSites(tabBarMethod, it, modifierType) },
         )
     } else {
         null
