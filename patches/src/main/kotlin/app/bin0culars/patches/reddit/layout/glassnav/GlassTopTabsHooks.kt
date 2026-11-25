@@ -48,4 +48,5 @@ internal fun hookTopTabs(
     sites.tabBarMethod.addInstructions(0, tabBarSmali)
     sites.headerTabsSites?.let(::hookHeaderTabsHeight)
     sites.indicatorSites?.let { hookTabIndicator(modifierType, it) }
+    hookTopTabsLabel(modifierType, sites)
 }

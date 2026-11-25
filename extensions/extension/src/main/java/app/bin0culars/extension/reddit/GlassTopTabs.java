@@ -11,7 +11,8 @@ final class GlassTopTabs {
 
     private static final float TABS_WEIGHT = 1000f;
     private static final float HEADER_TABS_HEIGHT_DP = 8f;
-    private static final float CAPSULE_MARGIN_DP = 4f;
+    private static final float CAPSULE_GAP_DP = 8f;
+    private static final float CAPSULE_INNER_PADDING_DP = 4f;
 
     private static final Map<Object, WeakReference<BelowWrapper>> BELOW_WRAPPERS =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -146,7 +147,14 @@ final class GlassTopTabs {
                 }
                 weightModifier = weight;
             }
-            Object wrapped = GlassBlur.drawWithContent(weight, TABS_DRAW);
+            float gap = (GlassSearch.CIRCLE_EXTRA_DP / 2f) + CAPSULE_GAP_DP;
+            Object outerPadded = GlassNavPatch.padding(weight, gap, 0f, gap, 0f, 0);
+            Object withCapsule = GlassBlur.drawWithContent(outerPadded, TABS_DRAW);
+            Object wrapped = GlassNavPatch.padding(
+                    withCapsule, CAPSULE_INNER_PADDING_DP, 0f, CAPSULE_INNER_PADDING_DP, 0f, 0);
+            if (wrapped == null) {
+                return modifier;
+            }
             synchronized (WRAPPED_TO_ORIG) {
                 WRAPPED_TO_ORIG.put(wrapped, new WeakReference<>(modifier));
             }
@@ -197,18 +205,15 @@ final class GlassTopTabs {
         if (width <= 0f || height <= 0f) {
             return;
         }
-        float density = GlassNavPatch.getDensity();
-        float marginX = CAPSULE_MARGIN_DP * density;
-        float rectWidth = width - (2f * marginX);
         float circleDiameter = GlassSearch.getCircleDiameterPx();
         float rectHeight = circleDiameter > 0f ? circleDiameter : height;
-        if (rectWidth <= 0f || rectHeight <= 0f) {
+        if (rectHeight <= 0f) {
             return;
         }
         GlassTabPill.recordTabsBounds(height, rectHeight);
         float top = (height - rectHeight) / 2f;
         float radius = rectHeight / 2f;
-        GlassSearch.drawGlassCapsule(scope, marginX, top, rectWidth, rectHeight, radius);
+        GlassSearch.drawGlassCapsule(scope, 0f, top, width, rectHeight, radius);
     }
 
     private static Object newWeight(Object slot, float weight, boolean fill) {

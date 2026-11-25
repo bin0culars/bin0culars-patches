@@ -21,7 +21,7 @@ import kotlin.jvm.functions.Function2;
 public final class GlassSearch {
 
     static final float BUTTON_GAP_DP = 10f;
-    private static final float CIRCLE_EXTRA_DP = 8f;
+    static final float CIRCLE_EXTRA_DP = 8f;
     private static final String BOTTOM_NAV_SCREEN = "com.reddit.launch.bottomnav.BottomNavScreen";
     private static final String BUTTON_TAG = "bin0culars_glass_search_button";
     private static final String FADE_TAG = "bin0culars_glass_status_fade";
@@ -177,6 +177,46 @@ public final class GlassSearch {
         }
     }
 
+    public static long tabLabelFontSize() {
+        try {
+            return GlassTabLabel.tabLabelFontSize();
+        } catch (Throwable ignored) {
+            return 0L;
+        }
+    }
+
+    public static long tabLabelLineHeight() {
+        try {
+            return GlassTabLabel.tabLabelLineHeight();
+        } catch (Throwable ignored) {
+            return 0L;
+        }
+    }
+
+    public static int tabLabelMask(int original) {
+        try {
+            return GlassTabLabel.tabLabelMask(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
+    public static Object tabItemModifier(Object modifier) {
+        try {
+            return GlassTabLabel.tabItemModifier(modifier);
+        } catch (Throwable ignored) {
+            return modifier;
+        }
+    }
+
+    public static float tabItemTopPadding(float original) {
+        try {
+            return GlassTabLabel.tabItemTopPadding(original);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
     public static void setHooksApplied() {
         try {
             if (hooksApplied) {
@@ -245,13 +285,25 @@ public final class GlassSearch {
         }
     }
 
+    public static void onFeedAtTop(boolean atTop) {
+        try {
+            GlassTopBarState.onFeedAtTop(atTop);
+        } catch (Throwable ignored) {
+        }
+    }
+
     public static long topBarColor(long original) {
         try {
             if (!isSettingEnabled()) {
                 return original;
             }
             long pageColor = GlassNavPatch.lastPageColor;
-            return pageColor != 0L ? (pageColor | 0xFF00000000000000L) : original;
+            if (pageColor == 0L) {
+                return original;
+            }
+            return GlassTopBarState.isFeedAtTop()
+                    ? (pageColor | 0xFF00000000000000L)
+                    : (pageColor & 0x00FFFFFFFFFFFFFFL);
         } catch (Throwable ignored) {
             return original;
         }
@@ -506,7 +558,7 @@ public final class GlassSearch {
         return ((long) Float.floatToRawIntBits(x) << 32) | (Float.floatToRawIntBits(y) & 0xFFFFFFFFL);
     }
 
-    private static Object graphicsLayer(
+    static Object graphicsLayer(
             Object modifier,
             float scaleX,
             float scaleY,
