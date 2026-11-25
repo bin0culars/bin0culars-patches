@@ -154,11 +154,18 @@ public final class GlassSearch {
         }
     }
 
-    public static float tabsTopPadding(float original) {
+    public static void setHomePager(Object pager) {
         try {
-            return GlassTopTabs.tabsTopPadding(original);
+            GlassTopTabs.setHomePager(pager);
         } catch (Throwable ignored) {
-            return original;
+        }
+    }
+
+    public static Object tabIndicatorModifier(Object modifier) {
+        try {
+            return GlassTopTabs.tabIndicatorModifier(modifier);
+        } catch (Throwable ignored) {
+            return modifier;
         }
     }
 
