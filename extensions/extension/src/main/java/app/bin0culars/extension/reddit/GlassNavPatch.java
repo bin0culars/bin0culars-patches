@@ -264,6 +264,9 @@ public final class GlassNavPatch {
             boolean effectiveDark = glassIsDark();
             int rgb = effectiveDark ? 0x1C1C1E : 0xF2F2F7;
             int opacity = BinocularsMods.getInt("glass_navigation_opacity_percent");
+            if (GlassStyle.isSolid()) {
+                opacity = Math.max(opacity, 85);
+            }
             float factor = GlassBlur.blurActive() ? 0.6f : 1.0f;
             int alpha = Math.round(255f * opacity / 100f * factor);
             int argb = (alpha << 24) | rgb;
@@ -333,9 +336,14 @@ public final class GlassNavPatch {
         long cornerRadius = packFloats(radius, radius);
         long color = getCapsuleColor();
 
+        GlassStyle.drawShadow(scope, left, top, capsuleWidth, capsuleHeight, radius);
         GlassBlur.drawBar(scope, left, top, capsuleWidth, capsuleHeight, radius);
         drawRoundRect(scope, color, topLeft, capsuleSize, cornerRadius, null, 1.0f, 0xF0);
-        GlassBlur.drawEdge(scope, left, top, capsuleWidth, capsuleHeight, radius);
+        if (GlassStyle.isClear()) {
+            GlassBlur.drawEdge(scope, left, top, capsuleWidth, capsuleHeight, radius);
+        } else {
+            GlassStyle.drawOutline(scope, left, top, capsuleWidth, capsuleHeight, radius);
+        }
     }
 
     private static void drawRailCapsule(Object scope) {
@@ -375,8 +383,13 @@ public final class GlassNavPatch {
         long cornerRadius = packFloats(radius, radius);
         long color = getCapsuleColor();
 
+        GlassStyle.drawShadow(scope, left, top, capsuleWidth, capsuleHeight, radius);
         drawRoundRect(scope, color, topLeft, capsuleSize, cornerRadius, null, 1.0f, 0xF0);
-        GlassBlur.drawEdge(scope, left, top, capsuleWidth, capsuleHeight, radius);
+        if (GlassStyle.isClear()) {
+            GlassBlur.drawEdge(scope, left, top, capsuleWidth, capsuleHeight, radius);
+        } else {
+            GlassStyle.drawOutline(scope, left, top, capsuleWidth, capsuleHeight, radius);
+        }
     }
 
     private static Object padding(

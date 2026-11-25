@@ -23,8 +23,10 @@ internal fun hookGlassSearch() {
     val navSites = findNavVisibilitySites()
 
     if (topBarSites != null && bgSites != null && navSites != null) {
-        hookHomeTopBar(topBarMethod, modifierType, topBarSites)
+        val topTabsSites = findTopTabsSites(topBarMethod, modifierType, topBarSites.searchIndex)
+        hookHomeTopBar(topBarMethod, modifierType, topBarSites, topTabsSites)
         hookHomeScreenTopBar(bgSites)
+        topTabsSites?.let { hookTopTabs(modifierType, it) }
         navSites.constructorMethod?.addInstructions(
             0,
             "invoke-static/range { p1 .. p1 }, $SEARCH_EXTENSION_CLASS->onShowBottomNav(Z)V",
@@ -124,24 +126,27 @@ private fun hookCircleModifier(
 
 private fun hookSearchField(
     method: MutableMethod,
-    index: Int,
     modifierType: String,
-    vMod: Int,
-    vClick: Int,
-    origSmali: String,
+    sites: TopBarSites,
+    vComposer: Int?,
 ) {
+    val inlineTabsLine = if (vComposer != null) {
+        "\ninvoke-static/range { v$vComposer .. v$vComposer }, $SEARCH_EXTENSION_CLASS->inlineTabs(Ljava/lang/Object;)V"
+    } else {
+        ""
+    }
     method.replaceInstruction(
-        index,
-        "invoke-static/range { v$vMod .. v$vMod }, $SEARCH_EXTENSION_CLASS->searchFieldModifier(Ljava/lang/Object;)Ljava/lang/Object;",
+        sites.searchIndex,
+        "invoke-static/range { v${sites.vSearchMod} .. v${sites.vSearchMod} }, $SEARCH_EXTENSION_CLASS->searchFieldModifier(Ljava/lang/Object;)Ljava/lang/Object;",
     )
     method.addInstructions(
-        index + 1,
+        sites.searchIndex + 1,
         """
-            move-result-object v$vMod
-            check-cast v$vMod, $modifierType
-            invoke-static/range { v$vClick .. v$vClick }, $SEARCH_EXTENSION_CLASS->searchFieldClick(Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
-            move-result-object v$vClick
-            $origSmali
+            move-result-object v${sites.vSearchMod}
+            check-cast v${sites.vSearchMod}, $modifierType
+            invoke-static/range { v${sites.vSearchClick} .. v${sites.vSearchClick} }, $SEARCH_EXTENSION_CLASS->searchFieldClick(Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
+            move-result-object v${sites.vSearchClick}
+            ${sites.searchSmali}$inlineTabsLine
         """.trimIndent(),
     )
 }
@@ -226,16 +231,35 @@ private fun findTopBarSites(method: MutableMethod, modifierType: String): TopBar
     return buildTopBarSites(instructions, modifierType, leadingIndex, searchIndex, trailingIndex)
 }
 
-private fun hookHomeTopBar(method: MutableMethod, modifierType: String, sites: TopBarSites) {
+private fun hookHomeTopBar(
+    method: MutableMethod,
+    modifierType: String,
+    sites: TopBarSites,
+    topTabsSites: TopTabsSites?,
+) {
     // Inject bottom-to-top using replaceInstruction so branch labels stay on the hook.
     hookCircleModifier(method, sites.trailingIndex, modifierType, sites.vTrailingMod, sites.trailingSmali)
-    hookSearchField(method, sites.searchIndex, modifierType, sites.vSearchMod, sites.vSearchClick, sites.searchSmali)
+    hookSearchField(
+        method,
+        modifierType,
+        sites,
+        topTabsSites?.vSearchComposer,
+    )
     hookCircleModifier(method, sites.leadingIndex, modifierType, sites.vLeadingMod, sites.leadingSmali)
 
-    method.addInstructions(
-        0,
-        "invoke-static/range { p1 .. p1 }, $SEARCH_EXTENSION_CLASS->setSearchAction(Lkotlin/jvm/functions/Function0;)V",
-    )
+    val index0Smali = buildString {
+        append("invoke-static/range { p1 .. p1 }, $SEARCH_EXTENSION_CLASS->setSearchAction(Lkotlin/jvm/functions/Function0;)V")
+        if (topTabsSites != null) {
+            val belowReg = topTabsSites.belowParamReg
+            append("\ninvoke-static {}, $SEARCH_EXTENSION_CLASS->setTabsHooksApplied()V")
+            append(
+                "\ninvoke-static/range { p$belowReg .. p$belowReg }, " +
+                    "$SEARCH_EXTENSION_CLASS->wrapBelow(Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;",
+            )
+            append("\nmove-result-object p$belowReg")
+        }
+    }
+    method.addInstructions(0, index0Smali)
 }
 
 private data class NavVisibilitySites(

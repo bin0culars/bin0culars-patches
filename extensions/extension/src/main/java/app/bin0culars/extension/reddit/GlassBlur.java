@@ -353,11 +353,11 @@ public final class GlassBlur {
         }
     }
 
-    private static Object composeCanvas(Object scope) {
+    static Object composeCanvas(Object scope) {
         return null;
     }
 
-    private static Canvas nativeCanvas(Object composeCanvas) {
+    static Canvas nativeCanvas(Object composeCanvas) {
         return null;
     }
 
