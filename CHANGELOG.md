@@ -1,3 +1,9 @@
+## [1.16.0-dev.5](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.4...v1.16.0-dev.5) (2026-11-25)
+
+### ✨ New Features
+
+* **reddit:** Glass strength and glass tabs in the top row of Home ([#74](https://github.com/bin0culars/bin0culars-patches/issues/74)) ([a9a38cc](https://github.com/bin0culars/bin0culars-patches/commit/a9a38cc118531530aa358932bb31f4a6b9c0258a))
+
 ## [1.16.0-dev.4](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.3...v1.16.0-dev.4) (2026-11-25)
 
 ### 🐛 Bug Fixes
