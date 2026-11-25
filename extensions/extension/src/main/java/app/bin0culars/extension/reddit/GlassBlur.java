@@ -16,6 +16,7 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import app.bin0culars.extension.reddit.settings.BinocularsMods;
+import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 import kotlin.jvm.functions.Function1;
 
@@ -33,13 +34,23 @@ public final class GlassBlur {
     static ContentRecorder recording;
 
     private static float barLeft;
-    private static float barTop;
+    private static float barBaseTop;
+    static float barTop;
     private static float barW;
     private static float barH;
     private static float barSlide;
 
     private static RenderNode blurNode;
+    private static float blurNodeRadius = -1f;
+    static RenderNode searchBlurNode;
+    private static float searchBlurNodeRadius = -1f;
+    private static RenderEffect cachedBlurEffect;
     private static float cachedBlurRadius = -1f;
+
+    private static WeakReference<GlassSearchButton> searchButtonRef;
+    private static float searchLeft;
+    private static float searchTop;
+    private static float searchSize;
 
     private static Paint edgePaint;
     private static LinearGradient edgeShader;
@@ -167,6 +178,31 @@ public final class GlassBlur {
         }
     }
 
+    private static void updateBarSlide(float slide) {
+        barSlide = slide;
+        if (barW > 0f) {
+            barTop = barBaseTop + slide;
+        }
+    }
+
+    static boolean hasBarBounds() {
+        return barW > 0f;
+    }
+
+    static void setSearchButton(GlassSearchButton button) {
+        if (button != null && (searchButtonRef == null || searchButtonRef.get() != button)) {
+            searchButtonRef = new WeakReference<>(button);
+        }
+    }
+
+    private static boolean isSearchButtonVisible(View decorView) {
+        GlassSearchButton button = searchButtonRef != null ? searchButtonRef.get() : null;
+        return button != null
+                && button.isAttachedToWindow()
+                && button.isShown()
+                && button.getRootView() == decorView;
+    }
+
     public static int adjustBarLift(int lift, float barHeight, float fraction) {
         int full = Math.max(lift, Math.round(barHeight));
         int maxLift = liftPx();
@@ -176,7 +212,7 @@ public final class GlassBlur {
             extra = Math.round(maxLift * f);
         }
         int adjusted = lift + extra;
-        barSlide = full - adjusted;
+        updateBarSlide(full - adjusted);
         GlassSearch.onBarSlide(barSlide + maxLift, fraction <= 0f || (full > 0 && adjusted <= 0));
         return adjusted;
     }
@@ -190,7 +226,7 @@ public final class GlassBlur {
             extra = Math.round(maxLift * f);
         }
         int out = y - extra;
-        barSlide = out;
+        updateBarSlide(out);
         GlassSearch.onBarSlide(barSlide + maxLift, height > 0 && y >= height);
         return out;
     }
@@ -215,7 +251,8 @@ public final class GlassBlur {
             float bh = Float.intBitsToFloat((int) size);
 
             barLeft = left;
-            barTop = (current.height - bh) + top + barSlide;
+            barBaseTop = (current.height - bh) + top;
+            barTop = barBaseTop + barSlide;
             barW = cw;
             barH = ch;
 
@@ -244,42 +281,79 @@ public final class GlassBlur {
         return c | 0xFF000000;
     }
 
+    private static RenderEffect blurEffect(float r) {
+        if (cachedBlurEffect == null || cachedBlurRadius != r) {
+            ColorMatrix boost = new ColorMatrix();
+            boost.setSaturation(1.4f);
+            cachedBlurEffect = RenderEffect.createChainEffect(
+                    RenderEffect.createBlurEffect(r, r, Shader.TileMode.CLAMP),
+                    RenderEffect.createColorFilterEffect(new ColorMatrixColorFilter(boost)));
+            cachedBlurRadius = r;
+        }
+        return cachedBlurEffect;
+    }
+
+    private static float recordBlurInto(
+            RenderNode node, float appliedRadius, float left, float top, float bw, float bh) {
+        try {
+            if (current == null || node == null) {
+                return appliedRadius;
+            }
+            float r = blurRadiusPx();
+            if (r <= 0f) {
+                return appliedRadius;
+            }
+            int m = (int) Math.ceil(r);
+            int w = (int) Math.ceil(bw) + 2 * m;
+            int h = (int) Math.ceil(bh) + 2 * m;
+            if (w <= 0 || h <= 0) {
+                return appliedRadius;
+            }
+            node.setPosition(0, 0, w, h);
+            if (appliedRadius != r) {
+                node.setRenderEffect(blurEffect(r));
+                appliedRadius = r;
+            }
+            RecordingCanvas rec = node.beginRecording(w, h);
+            try {
+                rec.drawColor(pageArgb());
+                rec.translate(-(left - m), -(top - m));
+                rec.drawRenderNode(current.node);
+            } finally {
+                node.endRecording();
+            }
+            return appliedRadius;
+        } catch (Throwable ignored) {
+            return appliedRadius;
+        }
+    }
+
     private static void recordBlur() {
         try {
             if (current == null) {
                 return;
             }
-            float r = blurRadiusPx();
-            if (r <= 0f) {
-                return;
-            }
-            int m = (int) Math.ceil(r);
-            int w = (int) Math.ceil(barW) + 2 * m;
-            int h = (int) Math.ceil(barH) + 2 * m;
-            if (w <= 0 || h <= 0) {
-                return;
-            }
             if (blurNode == null) {
                 blurNode = new RenderNode("bin0culars_glass_blur");
             }
-            blurNode.setPosition(0, 0, w, h);
-            if (cachedBlurRadius != r) {
-                ColorMatrix boost = new ColorMatrix();
-                boost.setSaturation(1.4f);
-                RenderEffect effect = RenderEffect.createChainEffect(
-                        RenderEffect.createBlurEffect(r, r, Shader.TileMode.CLAMP),
-                        RenderEffect.createColorFilterEffect(new ColorMatrixColorFilter(boost)));
-                blurNode.setRenderEffect(effect);
-                cachedBlurRadius = r;
+            blurNodeRadius = recordBlurInto(blurNode, blurNodeRadius, barLeft, barTop, barW, barH);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    static void recordSearchBlur(float leftInContent, float topInContent, float size) {
+        try {
+            if (current == null || size <= 0f) {
+                return;
             }
-            RecordingCanvas rec = blurNode.beginRecording(w, h);
-            try {
-                rec.drawColor(pageArgb());
-                rec.translate(-(barLeft - m), -(barTop - m));
-                rec.drawRenderNode(current.node);
-            } finally {
-                blurNode.endRecording();
+            searchLeft = leftInContent;
+            searchTop = topInContent;
+            searchSize = size;
+            if (searchBlurNode == null) {
+                searchBlurNode = new RenderNode("bin0culars_glass_search_blur");
             }
+            searchBlurNodeRadius = recordBlurInto(
+                    searchBlurNode, searchBlurNodeRadius, leftInContent, topInContent, size, size);
         } catch (Throwable ignored) {
         }
     }
@@ -336,13 +410,19 @@ public final class GlassBlur {
             if (decorView == null || DECOR_VIEWS.containsKey(decorView)) {
                 return;
             }
-            DECOR_VIEWS.put(decorView, Boolean.TRUE);
-            decorView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            final View targetDecorView = decorView;
+            DECOR_VIEWS.put(targetDecorView, Boolean.TRUE);
+            targetDecorView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
                     try {
-                        if (blurActive() && current != null && barW > 0) {
-                            recordBlur();
+                        if (blurActive() && current != null) {
+                            if (barW > 0f) {
+                                recordBlur();
+                            }
+                            if (isSearchButtonVisible(targetDecorView) && searchSize > 0f) {
+                                recordSearchBlur(searchLeft, barW > 0f ? barTop : searchTop, searchSize);
+                            }
                         }
                     } catch (Throwable ignored) {
                     }

@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RenderNode;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
@@ -29,6 +31,8 @@ public final class GlassSearchButton extends View {
     private final Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint edgePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint iconPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Path clipPath = new Path();
+    private final int[] windowLocation = new int[2];
 
     private LinearGradient edgeShader;
     private int cachedEdgeHeight = -1;
@@ -187,6 +191,34 @@ public final class GlassSearchButton extends View {
         boolean isDark = GlassNavPatch.glassIsDark();
 
         GlassStyle.drawShadow(canvas, left, top, diameter, diameter, radius);
+
+        try {
+            if (GlassBlur.blurActive()
+                    && canvas.isHardwareAccelerated()
+                    && GlassBlur.current != null
+                    && GlassBlur.hasBarBounds()) {
+                GlassBlur.setSearchButton(this);
+                getLocationInWindow(windowLocation);
+                float leftInContent = windowLocation[0] + left;
+                float topInContent = GlassBlur.barTop;
+                GlassBlur.recordSearchBlur(leftInContent, topInContent, diameter);
+                RenderNode blur = GlassBlur.searchBlurNode;
+                if (blur != null && blur.hasDisplayList()) {
+                    int m = (int) Math.ceil(GlassBlur.blurRadiusPx());
+                    canvas.save();
+                    try {
+                        clipPath.reset();
+                        clipPath.addCircle(cx, cy, radius, Path.Direction.CW);
+                        canvas.clipPath(clipPath);
+                        canvas.translate(left - m, top - m);
+                        canvas.drawRenderNode(blur);
+                    } finally {
+                        canvas.restore();
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
 
         circlePaint.setColor((int) (GlassNavPatch.getCapsuleColor() >>> 32));
         canvas.drawCircle(cx, cy, radius, circlePaint);
