@@ -1,3 +1,9 @@
+## [1.16.0-dev.8](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.7...v1.16.0-dev.8) (2026-11-25)
+
+### ✨ New Features
+
+* **reddit:** Glass top bar white only at the top, smaller centred tab labels ([#78](https://github.com/bin0culars/bin0culars-patches/issues/78)) ([6110677](https://github.com/bin0culars/bin0culars-patches/commit/6110677878b0f534bbb6a1a1eb666fe0e312117d))
+
 ## [1.16.0-dev.7](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.6...v1.16.0-dev.7) (2026-11-25)
 
 ### ✨ New Features
