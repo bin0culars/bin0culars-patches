@@ -1,3 +1,9 @@
+## [1.16.0-dev.10](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.9...v1.16.0-dev.10) (2026-11-25)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Frosted glass search button blurs the feed behind it like the bar ([#81](https://github.com/bin0culars/bin0culars-patches/issues/81)) ([2639b0c](https://github.com/bin0culars/bin0culars-patches/commit/2639b0c0244999b41df112ef8a0304e588b8ddba))
+
 ## [1.16.0-dev.9](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0-dev.8...v1.16.0-dev.9) (2026-11-25)
 
 ### 🐛 Bug Fixes
