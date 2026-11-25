@@ -568,6 +568,7 @@ public final class GlassSearch {
         long cornerRadius = packFloats(radius, radius);
         long color = GlassNavPatch.getCapsuleColor();
         GlassStyle.drawShadow(scope, left, top, width, height, radius);
+        GlassHeaderBlur.drawShapeBlur(scope, left, top, width, height, radius);
         GlassNavPatch.drawRoundRect(scope, color, topLeft, rectSize, cornerRadius, null, 1.0f, 0xF0);
         if (GlassStyle.isClear()) {
             GlassBlur.drawEdge(scope, left, top, width, height, radius);

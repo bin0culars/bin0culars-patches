@@ -23,7 +23,7 @@ import kotlin.jvm.functions.Function1;
 public final class GlassBlur {
 
     // Upstream Morphe found that a blur render effect redrawn every frame can crash the app on Android 12/13.
-    private static final int MIN_SDK = 34;
+    static final int MIN_SDK = 34;
     private static final float MAX_BLUR_DP = 32f;
     static final float EDGE_DP = 1f;
 
@@ -98,8 +98,10 @@ public final class GlassBlur {
         }
     }
 
-    private static final class ContentRecorder implements Function1<Object, Object> {
+    static final class ContentRecorder implements Function1<Object, Object> {
         final RenderNode node = new RenderNode("bin0culars_glass_content");
+        RecordingCanvas recCanvas;
+        boolean headerPending;
         boolean holdsBar;
         int width;
         int height;
@@ -135,6 +137,8 @@ public final class GlassBlur {
                 RecordingCanvas rec = node.beginRecording(w, h);
                 ContentRecorder previous = recording;
                 recording = this;
+                recCanvas = rec;
+                headerPending = false;
                 // Swap Compose's native canvas with the RenderNode's RecordingCanvas to capture content drawing.
                 setNativeCanvas(cc, rec);
                 try {
@@ -142,10 +146,17 @@ public final class GlassBlur {
                     GlassNavPatch.drawContent(scope);
                 } finally {
                     setNativeCanvas(cc, real);
+                    recCanvas = null;
                     node.endRecording();
                     recording = previous;
                 }
                 real.drawRenderNode(node);
+                if (headerPending) {
+                    real.save();
+                    real.concat(GlassHeaderBlur.headerMatrix);
+                    real.drawRenderNode(GlassHeaderBlur.headerNode);
+                    real.restore();
+                }
                 if (!holdsBar) {
                     current = this;
                     width = w;
@@ -293,7 +304,7 @@ public final class GlassBlur {
         return cachedBlurEffect;
     }
 
-    private static float recordBlurInto(
+    static float recordBlurInto(
             RenderNode node, float appliedRadius, float left, float top, float bw, float bh) {
         try {
             if (current == null || node == null) {
@@ -423,6 +434,7 @@ public final class GlassBlur {
                             if (isSearchButtonVisible(targetDecorView) && searchSize > 0f) {
                                 recordSearchBlur(searchLeft, barW > 0f ? barTop : searchTop, searchSize);
                             }
+                            GlassHeaderBlur.reRecordSlots();
                         }
                     } catch (Throwable ignored) {
                     }
@@ -441,7 +453,7 @@ public final class GlassBlur {
         return null;
     }
 
-    private static void setNativeCanvas(Object composeCanvas, Canvas canvas) {}
+    static void setNativeCanvas(Object composeCanvas, Canvas canvas) {}
 
     @SuppressWarnings("rawtypes")
     static Object drawWithContent(Object modifier, Function1 block) {
