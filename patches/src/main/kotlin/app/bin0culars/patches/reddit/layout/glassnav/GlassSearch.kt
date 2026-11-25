@@ -26,6 +26,7 @@ internal fun hookGlassSearch() {
         val topTabsSites = findTopTabsSites(topBarMethod, modifierType, topBarSites.searchIndex)
         hookHomeTopBar(topBarMethod, modifierType, topBarSites, topTabsSites)
         hookHomeScreenTopBar(bgSites)
+        hookHeaderBlur(bgSites)
         topTabsSites?.let { hookTopTabs(modifierType, it) }
         hookGlassTopBarAtTop()
         navSites.constructorMethod?.addInstructions(
