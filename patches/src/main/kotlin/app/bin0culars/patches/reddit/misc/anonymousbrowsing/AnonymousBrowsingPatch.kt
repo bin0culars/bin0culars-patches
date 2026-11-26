@@ -21,6 +21,8 @@ val anonymousBrowsingPatch = patch(
     dependsOn(binocularsModsSettingsPatch)
     extendWith("extensions/extension.mpe")
     execute {
+        val method = IncognitoRevampEnabledFingerprint.methodOrNull ?: return@execute
+
         addBinocularsModsSetting(
             BinocularsModsSetting(
                 key = "account_switcher_private_mode",
@@ -36,7 +38,7 @@ val anonymousBrowsingPatch = patch(
             ),
         )
 
-        IncognitoRevampEnabledFingerprint.method.addInstructionsWithLabels(
+        method.addInstructionsWithLabels(
             0,
             """
                 invoke-static { }, $EXTENSION_CLASS->revampOverride()I
