@@ -19,11 +19,29 @@ private fun fillBridge(name: String, smali: String) {
     Fingerprint(definingClass = EXTENSION_CLASS, name = name).method.addInstructions(0, smali)
 }
 
+private fun hookListConstructor(
+    fingerprint: Fingerprint,
+    label: String,
+    extensionMethod: String,
+) {
+    val constructor = fingerprint.classDef.methods.firstOrNull { method ->
+        method.name == "<init>" && method.parameterTypes.firstOrNull()?.toString() == "Ljava/util/List;"
+    } ?: throw PatchException("Could not find $label constructor")
+
+    constructor.addInstructions(
+        0,
+        """
+            invoke-static {p1}, $EXTENSION_CLASS->$extensionMethod(Ljava/util/List;)Ljava/util/List;
+            move-result-object p1
+        """.trimIndent(),
+    )
+}
+
 @Suppress("unused")
 val autoModCommentsPatch =
     patch(
         name = "AutoModerator comments",
-        description = "Collapses or hides comments from u/AutoModerator. Choose in Settings → bin0culars mods.",
+        description = "Collapses or hides comments from u/AutoModerator, other bot accounts and comments moderators pin at the top. Choose in Settings → bin0culars mods.",
         default = true,
     ) {
         compatibleWith(COMPATIBILITY_REDDIT)
@@ -35,8 +53,8 @@ val autoModCommentsPatch =
                 BinocularsModsSetting(
                     key = "automod_comments",
                     section = BinocularsModsSection.POSTS,
-                    title = "AutoModerator comments",
-                    summary = "Collapse or hide the bot comments that many subreddits pin above the discussion. Collapsed ones open with a tap. Replies to a hidden comment are hidden too.",
+                    title = "AutoModerator and pinned comments",
+                    summary = "Collapse or hide comments from AutoModerator and other bot accounts (App badge), and comments moderators pin at the top. Collapsed ones open with a tap. Replies to a hidden comment are hidden too.",
                     choices = listOf(
                         BinocularsModsChoice("off", "Show"),
                         BinocularsModsChoice("collapse", "Collapse"),
@@ -46,17 +64,9 @@ val autoModCommentsPatch =
                 ),
             )
 
-            val constructor = SetCommentsToStringFingerprint.classDef.methods.firstOrNull { method ->
-                method.name == "<init>" && method.parameterTypes.firstOrNull()?.toString() == "Ljava/util/List;"
-            } ?: throw PatchException("Could not find SetComments constructor")
-
-            constructor.addInstructions(
-                0,
-                """
-                    invoke-static {p1}, $EXTENSION_CLASS->filterComments(Ljava/util/List;)Ljava/util/List;
-                    move-result-object p1
-                """.trimIndent(),
-            )
+            hookListConstructor(SetCommentsToStringFingerprint, "SetComments", "filterComments")
+            hookListConstructor(SetCommentTreesToStringFingerprint, "SetCommentTrees", "filterTrees")
+            hookListConstructor(AppendCommentTreesToStringFingerprint, "AppendCommentTrees", "filterTrees")
 
             val commentClass = mutableClassDefBy("Lcom/reddit/domain/model/Comment;")
             val collapsedField = commentClass.fields.firstOrNull { it.name == "collapsed" && it.type == "Z" }
@@ -99,6 +109,48 @@ val autoModCommentsPatch =
                     check-cast p0, Lcom/reddit/domain/model/Comment;
                     iput-boolean p1, p0, Lcom/reddit/domain/model/Comment;->collapsed:Z
                     return-void
+                """.trimIndent(),
+            )
+
+            fillBridge(
+                "accountTypeOf",
+                """
+                    check-cast p0, Lcom/reddit/domain/model/Comment;
+                    invoke-virtual {p0}, Lcom/reddit/domain/model/Comment;->getAccountType()Lcom/reddit/domain/model/AccountType;
+                    move-result-object p0
+                    return-object p0
+                """.trimIndent(),
+            )
+
+            fillBridge(
+                "appAccountType",
+                """
+                    sget-object v0, Lcom/reddit/domain/model/AccountType;->APP:Lcom/reddit/domain/model/AccountType;
+                    return-object v0
+                """.trimIndent(),
+            )
+
+            fillBridge(
+                "isStickied",
+                """
+                    check-cast p0, Lcom/reddit/domain/model/Comment;
+                    invoke-virtual {p0}, Lcom/reddit/domain/model/Comment;->getStickied()Z
+                    move-result p0
+                    return p0
+                """.trimIndent(),
+            )
+
+            val commentTreeClass = CommentTreeToStringFingerprint.classDef
+            val commentTreeType = commentTreeClass.type
+            val commentsField = commentTreeClass.fields.firstOrNull { it.type == "Ljava/util/ArrayList;" }
+                ?: throw PatchException("Could not find ArrayList field in $commentTreeType")
+
+            fillBridge(
+                "treeComments",
+                """
+                    check-cast p0, $commentTreeType
+                    iget-object p0, p0, $commentTreeType->${commentsField.name}:Ljava/util/ArrayList;
+                    return-object p0
                 """.trimIndent(),
             )
         }

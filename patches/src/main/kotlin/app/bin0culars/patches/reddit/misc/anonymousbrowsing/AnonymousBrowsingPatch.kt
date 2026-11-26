@@ -5,7 +5,7 @@ import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSection
 import app.bin0culars.patches.reddit.misc.settings.BinocularsModsSetting
 import app.bin0culars.patches.reddit.misc.settings.addBinocularsModsSetting
 import app.bin0culars.patches.reddit.misc.settings.binocularsModsSettingsPatch
-import app.bin0culars.patches.reddit.shared.Constants.COMPATIBILITY_REDDIT
+import app.bin0culars.patches.reddit.shared.Constants.COMPATIBILITY_REDDIT_UNTIL_47
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.patch
 
@@ -17,7 +17,7 @@ val anonymousBrowsingPatch = patch(
     description = "Lets you choose whether the account switcher offers Anonymous Browsing or Incognito, even with one account. Choose in Settings → bin0culars mods.",
     default = true,
 ) {
-    compatibleWith(COMPATIBILITY_REDDIT)
+    compatibleWith(COMPATIBILITY_REDDIT_UNTIL_47)
     dependsOn(binocularsModsSettingsPatch)
     extendWith("extensions/extension.mpe")
     execute {
