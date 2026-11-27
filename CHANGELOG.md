@@ -1,3 +1,9 @@
+## [1.16.1-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.2...v1.16.1-dev.3) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Search button is no longer drawn over bottom sheets ([#92](https://github.com/bin0culars/bin0culars-patches/issues/92)) ([884297d](https://github.com/bin0culars/bin0culars-patches/commit/884297dc04ce313f4c240c82c8f1e1583ace997c))
+
 ## [1.16.1-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.1...v1.16.1-dev.2) (2026-11-27)
 
 ### 🐛 Bug Fixes
