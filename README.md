@@ -26,8 +26,8 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 
 **🎯 Supported versions:**
 
-| 2026.47.0 | 2026.46.0 | 2026.45.0 |
-| :---: | :---: | :---: |
+| 2026.48.0 | 2026.47.0 | 2026.46.0 | 2026.45.0 |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|

@@ -81,11 +81,26 @@ for patch in data["patches"]:
                 "package": pkg,
                 "emoji":   pkg_emoji(form_factor),
                 "patches": {},
-                "targets": pkg_entry.get("targets", []),
+                "targets": [],
             }
+        # Patches can support different versions, so list every version any patch supports
+        known = {t["version"] for t in by_pkg[key]["targets"]}
+        for t in pkg_entry.get("targets", []):
+            if t["version"] not in known:
+                by_pkg[key]["targets"].append(t)
+                known.add(t["version"])
         # Deduplicate patches that appear across multiple packages
         if patch["name"] not in by_pkg[key]["patches"]:
             by_pkg[key]["patches"][patch["name"]] = patch
+
+
+def version_key(target):
+    """Sort key that orders version strings numerically, newest first."""
+    return [int(p) if p.isdigit() else 0 for p in re.split(r"[.\-]", target["version"])]
+
+
+for entry in by_pkg.values():
+    entry["targets"].sort(key=version_key, reverse=True)
 
 
 def anchor(name):
