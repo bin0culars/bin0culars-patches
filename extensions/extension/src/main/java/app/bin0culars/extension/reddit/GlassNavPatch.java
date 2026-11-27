@@ -194,6 +194,27 @@ public final class GlassNavPatch {
         }
     }
 
+    public static float buttonTopSpace(float original) {
+        try {
+            return GlassPill.isActive() ? 0f : original;
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
+    public static float barRowHeight(float original) {
+        try {
+            if (!BinocularsMods.isEnabled("glass_navigation")) {
+                return original;
+            }
+            float baseCapsuleDp = BAR_ROW_HEIGHT_DP + 10f;
+            float capsuleDp = baseCapsuleDp * BinocularsMods.getInt("glass_navigation_height") / 100f;
+            return original + Math.max(0f, capsuleDp - baseCapsuleDp);
+        } catch (Throwable ignored) {
+            return original;
+        }
+    }
+
     public static Object barModifier(Object modifier) {
         try {
             if (!BinocularsMods.isEnabled("glass_navigation")) {
@@ -316,6 +337,10 @@ public final class GlassNavPatch {
         return pad + inset;
     }
 
+    static float barRowHeightPx() {
+        return barRowHeight(BAR_ROW_HEIGHT_DP) * getDensity();
+    }
+
     static float capsuleHeightPx() {
         float density = getDensity();
         int heightPercent = BinocularsMods.getInt("glass_navigation_height");
@@ -335,7 +360,7 @@ public final class GlassNavPatch {
         }
 
         float capsuleHeight = capsuleHeightPx();
-        float top = (BAR_ROW_HEIGHT_DP * density - capsuleHeight) / 2f;
+        float top = (barRowHeightPx() - capsuleHeight) / 2f;
 
         if (capsuleWidth <= 0f || capsuleHeight <= 0f) {
             return;
