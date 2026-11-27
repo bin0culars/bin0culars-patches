@@ -23,11 +23,15 @@ public final class GlassSearch {
     static final float BUTTON_GAP_DP = 10f;
     static final float CIRCLE_EXTRA_DP = 8f;
     private static final String BOTTOM_NAV_SCREEN = "com.reddit.launch.bottomnav.BottomNavScreen";
+    private static final String BOTTOM_SHEET_SCREEN = "com.reddit.screen.ComposeBottomSheetScreen";
     private static final String BUTTON_TAG = "bin0culars_glass_search_button";
     private static final String FADE_TAG = "bin0culars_glass_status_fade";
 
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
     private static final Set<Object> OVERLAY_SCREENS =
+            Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+    // Weak keys so a missed detach can't hide the button forever.
+    private static final Set<Object> OPEN_SHEETS =
             Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     private static final Function0<Object> NO_OP_CLICK =
@@ -341,12 +345,26 @@ public final class GlassSearch {
         }
     }
 
+    private static boolean isBottomSheet(Object screen) {
+        if (screen == null) {
+            return false;
+        }
+        for (Class<?> cls = screen.getClass(); cls != null && cls != Object.class; cls = cls.getSuperclass()) {
+            if (BOTTOM_SHEET_SCREEN.equals(cls.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void onScreenAttached(Object screen, View view) {
         try {
             if (screen == null) {
                 return;
             }
-            if (BOTTOM_NAV_SCREEN.equals(screen.getClass().getName())) {
+            if (isBottomSheet(screen)) {
+                OPEN_SHEETS.add(screen);
+            } else if (BOTTOM_NAV_SCREEN.equals(screen.getClass().getName())) {
                 bottomNavAttached = true;
                 bottomNavViewRef = new WeakReference<>(view);
                 OVERLAY_SCREENS.clear();
@@ -369,6 +387,7 @@ public final class GlassSearch {
             if (screen == null) {
                 return;
             }
+            OPEN_SHEETS.remove(screen);
             if (BOTTOM_NAV_SCREEN.equals(screen.getClass().getName())) {
                 bottomNavAttached = false;
             } else {
@@ -518,7 +537,7 @@ public final class GlassSearch {
             }
             if (button != null) {
                 button.setTranslationY(lastSlideDownPx);
-                if (barAutoHidden) {
+                if (barAutoHidden || !OPEN_SHEETS.isEmpty()) {
                     if (button.getVisibility() != View.INVISIBLE) {
                         button.setVisibility(View.INVISIBLE);
                     }
