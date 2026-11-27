@@ -1,3 +1,9 @@
+## [1.17.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.17.0-dev.1...v1.17.0-dev.2) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **reddit:** keep the glass bar pill and buttons centred at any height ([#94](https://github.com/bin0culars/bin0culars-patches/issues/94)) ([0ac5121](https://github.com/bin0culars/bin0culars-patches/commit/0ac51216e053da08f4ae76394b359cb53ec959c3))
+
 ## [1.17.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.3...v1.17.0-dev.1) (2026-11-27)
 
 ### ✨ New Features
