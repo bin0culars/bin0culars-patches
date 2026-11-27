@@ -1,3 +1,9 @@
+## [1.16.1-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.1...v1.16.1-dev.2) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Account switcher private mode no longer breaks patching on 2026.48.0 ([#89](https://github.com/bin0culars/bin0culars-patches/issues/89)) ([53f2b76](https://github.com/bin0culars/bin0culars-patches/commit/53f2b76f415422d9499d2231747a22a199b620cc))
+
 ## [1.16.1-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.1...v1.16.1-dev.2) (2026-11-26)
 
 ### 🐛 Bug Fixes
