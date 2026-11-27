@@ -14,6 +14,7 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.resourceXml
 import app.morphe.patcher.util.smali.ExternalLabel
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 @Suppress("unused")
 val downloadAllPatch =
@@ -37,9 +38,11 @@ val downloadAllPatch =
                 ),
             )
 
-            ShareSheetLinkLoadedFingerprint.method.addInstructions(
-                0,
-                "invoke-static/range { p1 .. p1 }, $EXTENSION_CLASS->setLink(Ljava/lang/Object;)V",
+            val linkMatch = ShareSheetLoadLinkFingerprint.instructionMatches.first()
+            val linkRegister = (linkMatch.instruction as OneRegisterInstruction).registerA
+            ShareSheetLoadLinkFingerprint.method.addInstructions(
+                linkMatch.index + 1,
+                "invoke-static/range { v$linkRegister .. v$linkRegister }, $EXTENSION_CLASS->setLink(Ljava/lang/Object;)V",
             )
 
             val launchDownloadMethod = LaunchDownloadActionFingerprint.method

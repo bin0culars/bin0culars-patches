@@ -1,23 +1,21 @@
 package app.bin0culars.patches.reddit.misc.downloadall
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterWithin
+import app.morphe.patcher.checkCast
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.string
 
 internal const val EXTENSION_CLASS = "Lapp/bin0culars/extension/reddit/DownloadAllPatch;"
 
-object ShareSheetLinkLoadedFingerprint : Fingerprint(
-    returnType = "V",
-    parameters = listOf("Lcom/reddit/domain/model/Link;"),
+object ShareSheetLoadLinkFingerprint : Fingerprint(
+    definingClass = "Lcom/reddit/sharing/actions/handler/ActionsScreenEventHandler\$loadLink\$1;",
+    name = "invokeSuspend",
     filters = listOf(
+        checkCast("Lcom/reddit/domain/model/Link;"),
         methodCall(
             definingClass = "Lcom/reddit/domain/model/Link;",
-            name = "getCrossPostParentList",
-        ),
-        string(" · shared from "),
-        methodCall(
-            definingClass = "Lcom/reddit/sharing/SharePreview;",
-            name = "<init>",
+            name = "getPromoted",
+            location = MatchAfterWithin(10),
         ),
     ),
 )

@@ -1,9 +1,13 @@
 package app.bin0culars.patches.reddit.layout.glassnav
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val BUTTON_PARAM_COUNT = 13
 private const val SELECTED_PARAM_INDEX = 3
@@ -53,6 +57,19 @@ private fun hookNavButtonPill(method: MutableMethod) {
             invoke-static/range { p$selectedReg .. p$modReg }, $hookCall
             move-result-object p$modReg
             check-cast p$modReg, $modifierType
+        """.trimIndent(),
+    )
+
+    val spaceLiteral = 8f.toRawBits()
+    val spaceIndex = method.instructions.indexOfFirst { inst ->
+        inst is NarrowLiteralInstruction && inst.narrowLiteral == spaceLiteral
+    }.takeIf { it >= 0 }.orThrow("Could not find 8f literal in nav button method")
+    val spaceRegister = method.getInstruction<OneRegisterInstruction>(spaceIndex).registerA
+    method.addInstructions(
+        spaceIndex + 1,
+        """
+            invoke-static/range { v$spaceRegister .. v$spaceRegister }, $EXTENSION_CLASS->buttonTopSpace(F)F
+            move-result v$spaceRegister
         """.trimIndent(),
     )
 }

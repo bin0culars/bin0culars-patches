@@ -1,3 +1,39 @@
+## [1.17.0-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.17.0-dev.1...v1.17.0-dev.2) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **reddit:** keep the glass bar pill and buttons centred at any height ([#94](https://github.com/bin0culars/bin0culars-patches/issues/94)) ([0ac5121](https://github.com/bin0culars/bin0culars-patches/commit/0ac51216e053da08f4ae76394b359cb53ec959c3))
+
+## [1.17.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.3...v1.17.0-dev.1) (2026-11-27)
+
+### ✨ New Features
+
+* **reddit:** high-contrast navigation buttons ([#93](https://github.com/bin0culars/bin0culars-patches/issues/93)) ([3fd1f03](https://github.com/bin0culars/bin0culars-patches/commit/3fd1f033f812a28e0269980a40af95c9721e4d1d))
+
+## [1.16.1-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.2...v1.16.1-dev.3) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Search button is no longer drawn over bottom sheets ([#92](https://github.com/bin0culars/bin0culars-patches/issues/92)) ([884297d](https://github.com/bin0culars/bin0culars-patches/commit/884297dc04ce313f4c240c82c8f1e1583ace997c))
+
+## [1.16.1-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.1...v1.16.1-dev.2) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Account switcher private mode no longer breaks patching on 2026.48.0 ([#89](https://github.com/bin0culars/bin0culars-patches/issues/89)) ([53f2b76](https://github.com/bin0culars/bin0culars-patches/commit/53f2b76f415422d9499d2231747a22a199b620cc))
+
+## [1.16.1-dev.2](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.1...v1.16.1-dev.2) (2026-11-26)
+
+### 🐛 Bug Fixes
+
+* **reddit:** Account switcher private mode no longer breaks patching on 2026.48.0 ([#89](https://github.com/bin0culars/bin0culars-patches/issues/89)) ([53f2b76](https://github.com/bin0culars/bin0culars-patches/commit/53f2b76f415422d9499d2231747a22a199b620cc))
+
+## [1.16.1-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.0...v1.16.1-dev.1) (2026-11-26)
+
+### 🐛 Bug Fixes
+
+* **reddit:** support Reddit 2026.48.0 ([#85](https://github.com/bin0culars/bin0culars-patches/issues/85)) ([ec4484b](https://github.com/bin0culars/bin0culars-patches/commit/ec4484bb5eeb075db487b6497305b7d74bae8682))
+
 ## [1.16.0](https://github.com/bin0culars/bin0culars-patches/compare/v1.15.0...v1.16.0) (2026-11-25)
 
 ### ✨ New Features

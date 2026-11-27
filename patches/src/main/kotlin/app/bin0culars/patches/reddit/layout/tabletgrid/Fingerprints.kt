@@ -1,6 +1,7 @@
 package app.bin0culars.patches.reddit.layout.tabletgrid
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.anyInstruction
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.string
@@ -38,22 +39,42 @@ object ListFeedFingerprint : Fingerprint(
     returnType = "V",
     filters =
     listOf(
-        methodCall(
-            parameters =
-            listOf(
-                "L",
-                "L",
-                "L",
-                "Lcom/reddit/feeds/data/FeedType;",
-                "Z",
-                "L",
-                "L",
-                "Landroidx/compose/runtime/internal/a;",
-                "L",
-                "I",
-                "I",
+        anyInstruction(
+            methodCall(
+                parameters =
+                listOf(
+                    "L",
+                    "L",
+                    "L",
+                    "Lcom/reddit/feeds/data/FeedType;",
+                    "Z",
+                    "L",
+                    "L",
+                    "Landroidx/compose/runtime/internal/a;",
+                    "L",
+                    "I",
+                    "I",
+                ),
+                returnType = "V",
             ),
-            returnType = "V",
+            methodCall(
+                parameters =
+                listOf(
+                    "L",
+                    "L",
+                    "L",
+                    "Lcom/reddit/feeds/data/FeedType;",
+                    "Z",
+                    "L",
+                    "L",
+                    "L",
+                    "Landroidx/compose/runtime/internal/a;",
+                    "L",
+                    "I",
+                    "I",
+                ),
+                returnType = "V",
+            ),
         ),
     ),
     custom = { method, _ ->

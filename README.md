@@ -17,23 +17,23 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.16.0](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.16.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;22 patches total
+> **[v1.17.0-dev.2](https://github.com/bin0culars/bin0culars-patches/releases/tag/v1.17.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;23 patches total
 <details open>
-<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;22 patches</summary>
+<summary>📦 Reddit&nbsp;&nbsp;•&nbsp;&nbsp;23 patches</summary>
 <br>
 
 **Package name:** `com.reddit.frontpage`
 
 **🎯 Supported versions:**
 
-| 2026.47.0 | 2026.46.0 | 2026.45.0 |
-| :---: | :---: | :---: |
+| 2026.48.0 | 2026.47.0 | 2026.46.0 | 2026.45.0 |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Account switcher private mode](#account-switcher-private-mode) | Lets you choose whether the account switcher offers Anonymous Browsing or Incognito, even with one account. Choose in Settings → bin0culars mods. |  |
 | [Always show Hide](#always-show-hide) | Keeps the Hide option in the post menu on Home, even when Reddit swaps it for recommendation options. Turn it on in Settings → bin0culars mods. |  |
-| [AutoModerator comments](#automoderator-comments) | Collapses or hides comments from u/AutoModerator. Choose in Settings → bin0culars mods. |  |
+| [AutoModerator comments](#automoderator-comments) | Collapses or hides comments from u/AutoModerator, other bot accounts and comments moderators pin at the top. Choose in Settings → bin0culars mods. |  |
 | [Collapse all comments](#collapse-all-comments) | Adds a button next to the comment count on a post that collapses or expands all comments. Choose what it collapses in Settings → bin0culars mods. |  |
 | [Colorize comment indent lines](#colorize-comment-indent-lines) | Gives each reply level in a comment thread its own line colour. Turn it on in Settings → bin0culars mods. |  |
 | [Content-type filter](#content-type-filter) | Show only videos, images, text or link posts on Home and Popular. |  |
@@ -45,6 +45,7 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 | [Feed auto-scroll](#feed-auto-scroll) | Adds a play button to the navigation bar that slowly scrolls the feed on screen. Speed is set in bin0culars mods. |  |
 | [Full-screen reply](#full-screen-reply) | Opens replies in the older full-screen editor that shows the comment you're replying to, so you can select and quote its text. Turn it on in Settings → bin0culars mods. |  |
 | [Glass navigation bar](#glass-navigation-bar) | Turns the bottom navigation bar (the side rail on tablets) into a floating see-through capsule. Turn it on in Settings → bin0culars mods. |  |
+| [High-contrast navigation buttons](#high-contrast-navigation-buttons) | Shows the unselected buttons of the navigation bar in black or white instead of grey. Turn it on in Settings → bin0culars mods. |  |
 | [Home feed tabs](#home-feed-tabs) | Adds swipeable For You, Following and Popular tabs to the home feed. Turn it on in Settings → bin0culars mods. |  |
 | [Post side panel](#post-side-panel) | On tablets in landscape, opens posts in a panel on the right while the feed stays visible. Can be turned off in Settings → bin0culars mods. |  |
 | [Same-subreddit full-screen media](#same-subreddit-full-screen-media) | Lets full-screen videos and images show only posts from the subreddit you opened. Turn it on in Settings → bin0culars mods. |  |
@@ -64,17 +65,17 @@ In Morphe Manager, add this repository as a patch source: https://github.com/bin
 
 - **Tablets:** a 2–3 column grid feed on wide screens, and posts that open in a side panel in landscape while the feed stays visible.
 - **Feed:** swipeable For You / Following / Popular tabs, a content-type filter, hands-free auto-scroll, Hide always available in the post menu, and no surprise reloads: Home keeps its place when you come back to the app or press back to exit.
-- **Navigation:** a floating see-through glass bar (side rail on tablets) with the feed scrolling underneath, in Auto, Light or Dark, Tinted or Frosted glass (a real blur of what's behind the glass with a light edge, on the bar, the search button and the glass circles and tabs capsule at the top of Home, Android 14 and newer), a Glass strength choice (Clear, Balanced or Solid: a thin outline and soft shadow keep the glass visible on any background), with sliders for opacity, blur strength, height, width and bar position (lift it off the bottom edge), icons only (hide the labels), and a choice of round ends or corners (on tablets the rail floats on the same background as the feed), and an iOS-style search button: search moves from the top of Home into a round glass button next to the bar, while the menu and avatar float as small glass circles over the feed, the For You / Following / Popular tabs move up into a glass capsule in the same row (the selected tab gets a soft pill highlight, as does the selected item in the bottom bar), the top bar is white (black in dark theme) at the top of Home and see-through once you scroll, and a soft fade keeps posts clear of the clock (phone); a see-through status bar that lets the home feed scroll up under the clock and fade into it (phone layout); keep the bottom bar visible while you scroll, and a + button in each community's top bar (next to Search) that starts a post in that community, handy if you hide the Create button.
-- **Posts and comments:** a collapse/expand-all button next to the comment count (fold all comments, only replies, or only deep replies), the full-screen reply editor with the parent comment visible (select and quote its text), AutoModerator comments shown, collapsed or hidden, and coloured comment lines (one colour per reply level; Rainbow, Pastel or Muted).
+- **Navigation:** a floating see-through glass bar (side rail on tablets) with the feed scrolling underneath, in Auto, Light or Dark, Tinted or Frosted glass (a real blur of what's behind the glass with a light edge, on the bar, the search button and the glass circles and tabs capsule at the top of Home, Android 14 and newer), a Glass strength choice (Clear, Balanced or Solid: a thin outline and soft shadow keep the glass visible on any background), with sliders for opacity, blur strength, height, width and bar position (lift it off the bottom edge), icons only (hide the labels), and a choice of round ends or corners (on tablets the rail floats on the same background as the feed), and an iOS-style search button: search moves from the top of Home into a round glass button next to the bar, while the menu and avatar float as small glass circles over the feed, the For You / Following / Popular tabs move up into a glass capsule in the same row (the selected tab gets a soft pill highlight, as does the selected item in the bottom bar, which stays round and centred with its icon and label at any glass height), the top bar is white (black in dark theme) at the top of Home and see-through once you scroll, and a soft fade keeps posts clear of the clock (phone); a see-through status bar that lets the home feed scroll up under the clock and fade into it (phone layout); keep the bottom bar visible while you scroll, high-contrast navigation buttons (unselected icons and labels in black in light mode and white in dark mode instead of grey, on the normal and the glass bar), and a + button in each community's top bar (next to Search) that starts a post in that community, handy if you hide the Create button.
+- **Posts and comments:** a collapse/expand-all button next to the comment count (fold all comments, only replies, or only deep replies), the full-screen reply editor with the parent comment visible (select and quote its text), AutoModerator, other bot (App) and pinned moderator comments shown, collapsed or hidden, and coloured comment lines (one colour per reply level; Rainbow, Pastel or Muted).
 - **Media:** playback speed for videos (0.5× to 2× from the player's ⋮ menu, plus hold to speed up), swipe up for comments in the video player, and full-screen media that stays in the subreddit you opened (the list ends when the subreddit has no more media, so it no longer gets stuck on a loading screen; videos hosted elsewhere, such as RedGIFs, aren't included).
 - **Sharing:** share the post's image, video or text instead of its link, and download every item of a gallery at once.
-- **Privacy:** choose whether the account switcher offers Anonymous Browsing or Incognito.
+- **Privacy:** choose whether the account switcher offers Anonymous Browsing or Incognito (Reddit 2026.47.0 and older; 2026.48.0 removed Anonymous Browsing, so it always uses Incognito).
 
 ### Settings
 
 All Reddit patches are controlled from Reddit Settings → **bin0culars mods** (this row replaces the "Reddit rules" link). Settings are grouped into Feed, Posts and comments, Media viewer, Navigation, Links and sharing, and Privacy. Some changes need a restart; Reddit offers one when you leave the screen.
 
-Tested on Reddit 2026.45.0, 2026.46.0 and 2026.47.0.
+Tested on Reddit 2026.45.0, 2026.46.0, 2026.47.0 and 2026.48.0.
 
 ### Use with Morphe's Reddit patches
 
