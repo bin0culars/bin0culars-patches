@@ -1,3 +1,9 @@
+## [1.17.0-dev.1](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.3...v1.17.0-dev.1) (2026-11-27)
+
+### ✨ New Features
+
+* **reddit:** high-contrast navigation buttons ([#93](https://github.com/bin0culars/bin0culars-patches/issues/93)) ([3fd1f03](https://github.com/bin0culars/bin0culars-patches/commit/3fd1f033f812a28e0269980a40af95c9721e4d1d))
+
 ## [1.16.1-dev.3](https://github.com/bin0culars/bin0culars-patches/compare/v1.16.1-dev.2...v1.16.1-dev.3) (2026-11-27)
 
 ### 🐛 Bug Fixes
