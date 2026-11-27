@@ -38,6 +38,32 @@ object BottomNavBarFingerprint : Fingerprint(
     ),
 )
 
+object BottomNavRowHeightFingerprint : Fingerprint(
+    returnType = "Ljava/lang/Object;",
+    parameters = listOf("Ljava/lang/Object;", "Ljava/lang/Object;"),
+    filters = listOf(
+        literal(28f),
+        literal(50f),
+        methodCall(
+            opcode = Opcode.INVOKE_STATIC,
+            parameters = listOf("L", "F"),
+            returnType = "L",
+            location = MatchAfterImmediately(),
+        ),
+    ),
+)
+
+object BottomNavBarHeightFingerprint : Fingerprint(
+    definingClass = "Lcom/reddit/launch/bottomnav/BottomNavScreen;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
+    returnType = "F",
+    parameters = listOf("L", "I"),
+    filters = listOf(
+        literal(50f),
+        opcode(Opcode.ADD_FLOAT_2ADDR, location = MatchAfterImmediately()),
+    ),
+)
+
 object SideNavRailFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     definingClass = "Lcom/reddit/widget/bottomnav/a;",

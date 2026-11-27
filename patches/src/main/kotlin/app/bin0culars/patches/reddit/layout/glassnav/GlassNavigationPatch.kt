@@ -232,6 +232,8 @@ val glassNavigationPatch =
                 rColorHigh,
             )
             hookBarModifier(bottomNavBarMethod, bottomNavIndex)
+            hookBarRowHeight(BottomNavRowHeightFingerprint, 1)
+            hookBarRowHeight(BottomNavBarHeightFingerprint, 0)
             hookBarDraw(
                 bottomNavBarMethod,
                 drawBehindIndex,

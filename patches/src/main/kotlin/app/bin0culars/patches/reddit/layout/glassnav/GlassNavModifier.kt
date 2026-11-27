@@ -1,10 +1,13 @@
 package app.bin0culars.patches.reddit.layout.glassnav
 
+import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
@@ -42,4 +45,17 @@ internal fun hookBarModifier(
         check-cast v$vM, $modifierType
     """.trimIndent()
     method.addInstructions(surfaceIndex, smali)
+}
+
+internal fun hookBarRowHeight(fingerprint: Fingerprint, literalMatchIndex: Int) {
+    val method = fingerprint.method
+    val index = fingerprint.instructionMatches[literalMatchIndex].index
+    val register = method.getInstruction<OneRegisterInstruction>(index).registerA
+    method.addInstructions(
+        index + 1,
+        """
+            invoke-static/range { v$register .. v$register }, $EXTENSION_CLASS->barRowHeight(F)F
+            move-result v$register
+        """.trimIndent(),
+    )
 }

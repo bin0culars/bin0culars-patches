@@ -132,9 +132,8 @@ public final class GlassSearchButton extends View {
                 ? ((View) parent).getWidth()
                 : getResources().getDisplayMetrics().widthPixels;
         int endMargin = Math.round(GlassNavPatch.capsuleSideGapPx(parentWidth)) - margin;
-        float density = GlassNavPatch.getDensity();
         int capsuleOffset = Math.round(
-                (GlassNavPatch.BAR_ROW_HEIGHT_DP * density - GlassNavPatch.capsuleHeightPx()) / 2f);
+                (GlassNavPatch.barRowHeightPx() - GlassNavPatch.capsuleHeightPx()) / 2f);
         int bottomMargin = Math.max(0, navBarInsetPx + capsuleOffset + GlassBlur.liftPx()) - margin;
 
         if (lp.width != viewSize
